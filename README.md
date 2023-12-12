@@ -8,7 +8,9 @@ This project provides a handler for Discord.js version 14. It is designed to sim
 - Discord.js v14
 
 ## Installation
-To set up the handler, run the following commands:
+- Make sure node is installed
+- Open up a terminal and cd to the bot dir
+- Run the command shown below
 ```bash
 npm i
 ```
