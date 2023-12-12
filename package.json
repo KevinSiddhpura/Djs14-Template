@@ -1,0 +1,24 @@
+{
+  "name": "djs-14",
+  "version": "1.0.0",
+  "description": "Discord bot template",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "Discord.js v14",
+    "Discord Bot"
+  ],
+  "author": "KevinSidd",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "chalk": "^4.1.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "nodemon": "^3.0.2"
+  }
+}

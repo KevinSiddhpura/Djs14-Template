@@ -1,0 +1,7 @@
+{
+    "serverID": "server-id",
+    "alwaysRefreshCmds": false,
+    "extraStartUpLogs": false,
+
+    "devs": ["user-Id", "user-Id"]
+}
