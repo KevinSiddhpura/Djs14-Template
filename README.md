@@ -1,4 +1,4 @@
-# Djs14-Handler
+# Discord.js 14 - Bot Template
 
 ## Overview
 This project provides a handler for Discord.js version 14. It is designed to simplify bot development using the latest features of Discord.js.
