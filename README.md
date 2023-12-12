@@ -14,3 +14,22 @@ This project provides a handler for Discord.js version 14. It is designed to sim
 ```bash
 npm i
 ```
+
+## Configuration
+- Bot secret (`token`) is to be stored in `.env` file
+- Other config options are available in `config.json` file
+  - Make sure to put correct `serverID`
+
+## Clone
+- Clone the repo!
+```
+git clone https://github.com/KevinSidd/Djs14-Handler.git
+```
+
+## Regarding updates
+- More commands and utils will be added
+- Currently there is no anti-crash, will be introduced soon!
+- TS version will be released as well
+
+# Thanks
+- Happy coding
