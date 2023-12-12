@@ -34,7 +34,7 @@ npm run dev
 ## Configuration
 - Bot secret (`token`) is to be stored in `.env` file
 - Other config options are available in `config.json` file
-  - Make sure to put correct `serverID`
+- Make sure to put correct `serverID`
 
 ## Clone
 - Clone the repo!
