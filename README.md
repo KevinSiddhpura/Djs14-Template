@@ -15,6 +15,14 @@ This project provides a handler for Discord.js version 14. It is designed to sim
 npm i
 ```
 
+- To start the bot use the command!
+```
+npm start
+```
+```
+npm run dev
+```
+
 ## Configuration
 - Bot secret (`token`) is to be stored in `.env` file
 - Other config options are available in `config.json` file
