@@ -15,8 +15,17 @@ module.exports = async (/**@type {Client} */ client) => {
             };
         });
 
+        if(config.serverID === "") {
+            logger.error("Server ID not set in config.json");
+            return process.exit(1);
+        }
+
         const guild = await client.guilds.fetch(config.serverID);
-        if (!guild) return;
+        if (!guild) {
+            logger.error("Could not find guild with ID " + config.serverID + " (mentioned in config.json)");
+            process.exit(1);
+            return;
+        }
 
         const data = await rest.put(
             Routes.applicationGuildCommands(client.user.id, guild.id),
