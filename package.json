@@ -1,5 +1,5 @@
 {
-  "name": "djs14-h",
+  "name": "djs14-bot",
   "version": "1.0.0",
   "description": "Discord bot template",
   "main": "src/index.js",
