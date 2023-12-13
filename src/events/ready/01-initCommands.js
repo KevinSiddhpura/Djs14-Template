@@ -20,9 +20,9 @@ module.exports = async (/**@type {Client} */ client) => {
             return process.exit(1);
         }
 
-        const guild = await client.guilds.fetch(config.serverID);
+        const guild = client.guilds.cache.get(config.serverID);
         if (!guild) {
-            logger.error("Could not find guild with ID " + config.serverID + " (mentioned in config.json)");
+            logger.error("Could not find guild with ID: " + config.serverID + " (mentioned in config.json)");
             process.exit(1);
             return;
         }
