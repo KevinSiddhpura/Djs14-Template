@@ -40,27 +40,27 @@ module.exports = {
     },
 
     getChannel: (channel, guild) => {
-        let channel = guild.channels.cache.get(c => c.name === channel) || guild.channels.cache.get(c => c.id === channel);
-        if(channel) {
-            return channel;
+        let _channel = guild.channels.cache.get(c => c.name === channel) || guild.channels.cache.get(c => c.id === channel);
+        if(_channel) {
+            return _channel;
         } else {
             return false;
         }
     },
 
     getRole: (role, guild) => {
-        let role = guild.roles.cache.get(r => r.name === role) || guild.roles.cache.get(r => r.id === role);
-        if(role) {
-            return role;
+        let _role = guild.roles.cache.get(r => r.name === role) || guild.roles.cache.get(r => r.id === role);
+        if(_role) {
+            return _role;
         } else {
             return false;
         }
     },
 
     findMember: async (memberId, guild) => {
-        let member = await guild.members.fetch(memberId);
-        if(member) {
-            return member;
+        let _member = await guild.members.fetch(memberId);
+        if(_member) {
+            return _member;
         } else {
             return false;
         }
