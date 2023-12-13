@@ -17,7 +17,7 @@ module.exports = {
         console.log(formatMultiline(chalk.yellow.bold('=[ WARN   ] •'), message));
     },
     error: (message) => {
-        console.log(formatMultiline(chalk.red.bold('=[ERROR] •'), message));
+        console.log(formatMultiline(chalk.red.bold('=[ ERROR  ] •'), message));
     },
     update: (message) => {
         console.log(formatMultiline(chalk.magenta.bold('=[ UPDATE ] •'), message));
