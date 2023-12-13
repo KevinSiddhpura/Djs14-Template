@@ -38,4 +38,31 @@ module.exports = {
 
         return commands;
     },
+
+    getChannel: (channel, guild) => {
+        let channel = guild.channels.cache.get(c => c.name === channel) || guild.channels.cache.get(c => c.id === channel);
+        if(channel) {
+            return channel;
+        } else {
+            return false;
+        }
+    },
+
+    getRole: (role, guild) => {
+        let role = guild.roles.cache.get(r => r.name === role) || guild.roles.cache.get(r => r.id === role);
+        if(role) {
+            return role;
+        } else {
+            return false;
+        }
+    },
+
+    findMember: async (memberId, guild) => {
+        let member = await guild.members.fetch(memberId);
+        if(member) {
+            return member;
+        } else {
+            return false;
+        }
+    }
 }
