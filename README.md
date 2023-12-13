@@ -7,6 +7,14 @@ This project provides a handler for Discord.js version 14. It is designed to sim
 - Node.js v16.9 or above
 - Discord.js v14
 
+## Features
+- Simplified command and event handling for Discord.js v14
+- Modular structure for easy customization
+
+## Additional Resources
+- [Discord.js Guide](https://discordjs.guide/#before-you-begin)
+- [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
+
 ## Installation
 - Make sure node is installed
 - Open up a terminal and cd to the bot dir
@@ -26,7 +34,7 @@ npm run dev
 ## Configuration
 - Bot secret (`token`) is to be stored in `.env` file
 - Other config options are available in `config.json` file
-  - Make sure to put correct `serverID`
+- Make sure to put correct `serverID`
 
 ## Clone
 - Clone the repo!
