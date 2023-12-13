@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
 
 module.exports = {
     name: "-",
@@ -15,7 +15,7 @@ module.exports = {
             required: true,
         }
     ],
-    execute: async (client, interaction) => {
+    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         interaction.reply({
             content: "Your command logic goes here!",
             ephemeral: true,
