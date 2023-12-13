@@ -6,6 +6,7 @@ const errorFile = fs.createWriteStream("errors.log", {
 });
 
 const logError = (type, error) => {
+    logger.error(error);
     const timeStamp = new Date().toISOString();
     if (type === "uncaughtException") {
         const logMessage = `${timeStamp} - ${type}: ${error}\n\n`;
@@ -18,12 +19,10 @@ const logError = (type, error) => {
 
 module.exports = () => {
     process.on("uncaughtException", (error, origin) => {
-        logger.error(`${error.stack}`);
-        logError(error.stack);
+        logError("uncaughtException", error.stack);
     });
 
     process.on("unhandledRejection", (reason) => {
-        logger.error(reason);
-        logError(reason);
+        logError("unhandledRejection", reason);
     })
 }

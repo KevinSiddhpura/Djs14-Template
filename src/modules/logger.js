@@ -8,18 +8,18 @@ const formatMultiline = (prefix, message) => {
 
 module.exports = {
     system: (message) => {
-        console.log(formatMultiline(chalk.green.bold('=[ SYSTEM ] •'), message));
+        console.log(formatMultiline(chalk.green.bold('=[ SYSTEM ] •'), message.toString()));
     },
     info: (message) => {
-        console.log(formatMultiline(chalk.cyan.bold('=[ INFO   ] •'), message));
+        console.log(formatMultiline(chalk.cyan.bold('=[ INFO   ] •'), message.toString()));
     },
     warn: (message) => {
-        console.log(formatMultiline(chalk.yellow.bold('=[ WARN   ] •'), message));
+        console.log(formatMultiline(chalk.yellow.bold('=[ WARN   ] •'), message.toString()));
     },
     error: (message) => {
-        console.log(formatMultiline(chalk.red.bold('=[ ERROR  ] •'), message));
+        console.log(formatMultiline(chalk.red.bold('=[ ERROR  ] •'), message.toString()));
     },
     update: (message) => {
-        console.log(formatMultiline(chalk.magenta.bold('=[ UPDATE ] •'), message));
+        console.log(formatMultiline(chalk.magenta.bold('=[ UPDATE ] •'), message.toString()));
     }
 }
