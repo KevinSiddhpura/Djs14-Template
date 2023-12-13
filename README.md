@@ -1,51 +1,48 @@
 # Discord.js 14 - Bot
 
 ## Overview
-This project provides a handler for Discord.js version 14. It is designed to simplify bot development using the latest features of Discord.js.
+This discord.js v14 handler simplifies bot development by providing a streamlined command and event management system, ensuring ease of use with discord.js's latest features.
 
 ## Prerequisites
-- Node.js v16.9 or above
+- Node.js v16.9+
 - Discord.js v14
 
 ## Features
-- Simplified command and event handling for Discord.js v14
-- Modular structure for easy customization
+- Efficient command and event handling tailored for Discord.js v14.
+- Modular design for flexible customization.
+- Planned updates for additional commands and utilities.
 
-## Additional Resources
-- [Discord.js Guide](https://discordjs.guide/#before-you-begin)
-- [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
-
-## Installation
-- Make sure node is installed
-- Open up a terminal and cd to the bot dir
-- Run the command shown below
-```bash
-npm i
-```
-
-- To start the bot use the command!
-```
-npm start
-```
-```
-npm run dev
-```
-
-## Configuration
-- Bot secret (`token`) is to be stored in `.env` file
-- Other config options are available in `config.json` file
-- Make sure to put correct `serverID`
-
-## Clone
-- Clone the repo!
+## Installation & Setup
+1. Ensure Node.js is installed.
+2. Clone the repository:
 ```
 git clone https://github.com/KevinSidd/Djs14-Handler.git
 ```
+3. Navigate to the bot directory and install dependencies:
+```
+npm i
+```
+4. To start the bot
+```
+node src/index.js
+```
+- Alternative
+```
+npm start
+```
 
-## Regarding updates
-- More commands and utils will be added
-- Currently there is no anti-crash, will be introduced soon!
-- TS version will be released as well
+## Configuration
+- Store the bot token in a `.env` file.
+- Configure bot settings in `config.json`, including `serverID`.
 
-# Thanks
-- Happy coding
+## Upcoming Features
+- Implementation of an anti-crash system.
+- Addition of TypeScript support.
+- MYSQL and MongoDB support
+
+## Resources
+- [Discord.js Guide](https://discordjs.guide/#before-you-begin)
+- [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
+
+## Acknowledgments
+This project is a continuous effort. We appreciate your contributions and feedback. Happy coding!
