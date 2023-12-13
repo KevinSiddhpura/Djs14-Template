@@ -31,7 +31,7 @@ module.exports = {
         },
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        await interaction.deferReply({ ephemeral: false });
+        await interaction.deferReply({ ephemeral: true });
 
         const subCommand = interaction.options.getSubcommand();
         const guild = await interaction.guild.fetch();
@@ -150,13 +150,13 @@ module.exports = {
                     try {
                         if (i.customId === "srv-back") {
                             page--;
-                            i.message.edit({
+                            i.editReply({
                                 embeds: [pages[page]],
                                 components: [getRow()]
                             });
                         } else if (i.customId === "srv-next") {
                             page++;
-                            i.message.edit({
+                            i.editReply({
                                 embeds: [pages[page]],
                                 components: [getRow()]
                             });
@@ -213,7 +213,7 @@ module.exports = {
                         text: `Requested by ${interaction.user.username}`,
                         iconURL: interaction.user.displayAvatarURL()
                     });
-                    
+
                 return interaction.editReply({
                     embeds: [embed]
                 }).catch((e) => {

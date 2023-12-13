@@ -32,7 +32,7 @@ module.exports = {
         }
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        await interaction.deferReply({ ephemeral: false });
+        await interaction.deferReply({ ephemeral: true });
 
         const user = interaction.options.getUser("mention") || interaction.user;
         let imageURL = user.displayAvatarURL({ size: 4096 });

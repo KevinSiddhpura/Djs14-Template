@@ -1,5 +1,4 @@
 const { Client, CommandInteraction, EmbedBuilder } = require("discord.js");
-const { getCommands } = require("../../modules/utils");
 
 module.exports = {
     name: "ping",
@@ -11,11 +10,10 @@ module.exports = {
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 
-        await interaction.deferReply({ ephemeral: false });
-
+        await interaction.deferReply({ ephemeral: true });
         const repTime = await interaction.fetchReply();
 
-        interaction.editReply({
+        return interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Ping Pong!")
