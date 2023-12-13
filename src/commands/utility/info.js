@@ -185,37 +185,37 @@ module.exports = {
                     });
                 }
 
+                const embed = new EmbedBuilder()
+                    .setColor(Colors.Aqua)
+                    .setTitle("User Information")
+                    .setDescription([
+                        `- **Is Bot** • ${user.bot ? "Yes" : "No"}`,
+                        `- **Global Name** • ${user.globalName || "No global name set"}`,
+                        `- **Username** • ${user.username}`,
+                        `- **Nickname** • ${member.nickname || "No nickname set"}`,
+                        `- **ID** • ${user.id}`,
+                        `- **Created On** • <t:${Math.floor(user.createdTimestamp / 1000)}:f>`,
+                        `- **Joined On** • <t:${Math.floor(member.joinedTimestamp / 1000)}:f>`,
+                        `- **Hext Color** • ${member.displayHexColor}`,
+                        `- **Highest Role** • <@&${member.roles.highest.id}>`,
+                        `- **Highest Permission** • ${member.permissions.toArray()[0] || "None"}`
+                    ].join("\n"))
+                    .setFields({
+                        name: "Member Roles",
+                        value: member.roles.cache
+                            .filter(r => r.id !== guild.id)
+                            .map(r => `<@&${r.id}>`)
+                            .join(" ") || "No roles"
+                    })
+                    .setTimestamp(Date.now())
+                    .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    });
+                    
                 return interaction.editReply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor(Colors.Aqua)
-                            .setTitle("User Information")
-                            .setDescription([
-                                `- **Is Bot** • ${user.bot ? "Yes" : "No"}`,
-                                `- **Global Name** • ${user.globalName || "No global name set"}`,
-                                `- **Username** • ${user.username}`,
-                                `- **Nickname** • ${member.nickname || "No nickname set"}`,
-                                `- **ID** • ${user.id}`,
-                                `- **Created On** • <t:${Math.floor(user.createdTimestamp / 1000)}:f>`,
-                                `- **Joined On** • <t:${Math.floor(member.joinedTimestamp / 1000)}:f>`,
-                                `- **Hext Color** • ${member.displayHexColor}`,
-                                `- **Highest Role** • <@&${member.roles.highest.id}>`,
-                                `- **Highest Permission** • ${member.permissions.toArray()[0] || "None"}`
-                            ].join("\n"))
-                            .setFields({
-                                name: "Member Roles",
-                                value: member.roles.cache
-                                    .filter(r => r.id !== guild.id)
-                                    .map(r => `<@&${r.id}>`)
-                                    .join(" ") || "No roles"
-                            })
-                            .setTimestamp(Date.now())
-                            .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-                            .setFooter({
-                                text: `Requested by ${interaction.user.username}`,
-                                iconURL: interaction.user.displayAvatarURL()
-                            })
-                    ],
+                    embeds: [embed]
                 }).catch((e) => {
                     logger.error(e);
                     interaction.editReply({
