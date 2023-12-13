@@ -16,7 +16,7 @@ This discord.js v14 handler simplifies bot development by providing a streamline
 1. Ensure Node.js is installed.
 2. Clone the repository:
 ```
-git clone https://github.com/KevinSidd/Djs14-Handler.git
+git clone https://github.com/KevinSidd/Djs14-Bot.git
 ```
 3. Navigate to the bot directory and install dependencies:
 ```
