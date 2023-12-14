@@ -10,6 +10,9 @@ module.exports = {
     system: (message) => {
         console.log(formatMultiline(chalk.green.bold('=[ SYSTEM ] •'), message.toString()));
     },
+    mysql: (message) => {
+        console.log(formatMultiline(chalk.blue.bold('=[ MYSQL  ] •'), message.toString()));
+    },
     info: (message) => {
         console.log(formatMultiline(chalk.cyan.bold('=[ INFO   ] •'), message.toString()));
     },

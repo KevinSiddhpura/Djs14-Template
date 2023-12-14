@@ -1,6 +1,16 @@
 {
-    "serverID": "server-id",
+    "devs": [
+        "528627987667615755"
+    ],
+    "serverID": "923216789956100146",
     "extraStartUpLogs": false,
-
-    "devs": ["user-Id", "user-Id"]
+    "database": {
+        "createConnection": true,
+        "type": "mysql",
+        "database": "db-name",
+        "host": "db-host",
+        "port": 3306,
+        "username": "db-username",
+        "password": "db-pass"
+    }
 }
