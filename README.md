@@ -11,6 +11,8 @@ This discord.js v14 handler simplifies bot development by providing a streamline
 - Efficient command and event handling tailored for Discord.js v14.
 - Modular design for flexible customization.
 - Planned updates for additional commands and utilities.
+- Better database management.
+- Anti-crash system.
 
 ## Installation & Setup
 1. Ensure Node.js is installed.
@@ -36,13 +38,12 @@ npm start
 - Configure bot settings in `config.json`, including `serverID`.
 
 ## Upcoming Features
-- Implementation of an anti-crash system.
 - Addition of TypeScript support.
-- MYSQL and MongoDB support
 
 ## Resources
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
+- [Sequelize Guide & Documentation](https://sequelize.org/docs/v6/getting-started/)
 
 ## Acknowledgments
-This project is a continuous effort. We appreciate your contributions and feedback. Happy coding!
+This project is a continuous effort. I will appreciate your feedbacks.
