@@ -1,7 +1,9 @@
 # Discord.js 14 - Bot
 
 ## Overview
-This discord.js v14 handler simplifies bot development by providing a streamlined command and event management system, ensuring ease of use with discord.js's latest features.
+Bot with better events, commands, databases and crash management. Will be pushing a lot of helpfull resources and utils.
+- Beginner friendly.
+- Easy to learn.
 
 ## Prerequisites
 - Node.js v16.9+
