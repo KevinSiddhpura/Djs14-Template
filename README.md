@@ -1,7 +1,7 @@
 # Discord.js 14 - Bot
 
 ## Overview
-Bot with better events, commands, databases and crash management. Will be pushing a lot of helpfull resources and utils.
+Bot with better events, commands, databases, ptero manager and crash management.
 - Beginner friendly.
 - Easy to learn.
 
