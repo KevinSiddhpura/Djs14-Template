@@ -1,16 +1,17 @@
 {
-    "devs": [
-        "528627987667615755"
-    ],
-    "serverID": "923216789956100146",
+    "devs": [],
+    "serverID": "-",
     "extraStartUpLogs": false,
     "database": {
         "createConnection": true,
         "type": "mysql",
-        "database": "db-name",
-        "host": "db-host",
-        "port": 3306,
-        "username": "db-username",
-        "password": "db-pass"
+        "database": "-",
+        "host": "-",
+        "port": 3006,
+        "username": "-",
+        "password": "-"
+    },
+    "pteroManager": {
+        "enabled": true
     }
 }

@@ -1,5 +1,4 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
-const { config, client } = require("../..");
 
 const cleanIt = (text) => {
     if (typeof (text) === "string") {

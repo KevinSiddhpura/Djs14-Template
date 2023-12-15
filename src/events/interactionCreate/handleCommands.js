@@ -20,11 +20,13 @@ module.exports = ( /**@type {Client} */ client, interaction) => {
         if (command.roleRequired !== false) {
             const rolesArray = command.roleRequired;
             const memberRoles = interaction.member.roles;
-            if (!memberRoles.cache.some(r => rolesArray.includes(r.name)) || !memberRoles.cache.some(r => rolesArray.includes(r.id))) {
-                return interaction.reply({
-                    content: "You don't have permission to use this command!",
-                    ephemeral: true
-                });
+            if (!memberRoles.cache.some(r => rolesArray.includes(r.name))) {
+                if(!memberRoles.cache.some(r => rolesArray.includes(r.id))) {
+                    return interaction.reply({
+                        content: "You are not allowed to use this command!",
+                        ephemeral: true
+                    });
+                }
             }
         }
 

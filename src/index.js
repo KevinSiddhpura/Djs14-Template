@@ -8,7 +8,7 @@ const eventHandler = require("./modules/handlers/eventHandler");
 const config = require("../config.json");
 const logger = require("./modules/logger");
 const fs = require("fs");
-const { createDatabaseConnection, getDatabase } = require("./modules/handlers/database");
+const { createDatabaseConnection } = require("./modules/handlers/database");
 
 if(!fs.existsSync("errors.log")) {
     fs.writeFileSync("errors.log", "");
@@ -22,10 +22,7 @@ const client = new Client({
 
 logger.system(`Attempting to start bot..`);
 eventHandler(client);
-
-if(config.database.createConnection) {
-    createDatabaseConnection();
-}
+createDatabaseConnection();
 
 client.login(process.env.TOKEN).catch(e => console.error(e));
 
