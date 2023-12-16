@@ -1,7 +1,7 @@
 # Discord.js 14 - Bot
 
 ## Overview
-Bot with better events, commands, databases and crash management. Will be pushing a lot of helpfull resources and utils.
+Bot with better events, commands, databases, ptero manager and crash management.
 - Beginner friendly.
 - Easy to learn.
 
@@ -46,6 +46,7 @@ npm start
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
 - [Sequelize Guide & Documentation](https://sequelize.org/docs/v6/getting-started/)
+- [Pterodactyl v1 API Reference](https://dashflo.net/docs/api/pterodactyl/v1/)
 
 ## Acknowledgments
 This project is a continuous effort. I will appreciate your feedbacks.
