@@ -9,13 +9,53 @@ const PTERO_KEY = process.env.PTERO_KEY;
 if (!config.pteroManager.enabled) return;
 
 module.exports = {
+    getInfo: async (serverId = SERVER_ID) => {
+        try {
+            const response = await axios.get(`${PANEL_URL}/api/client/servers/${serverId}`, {
+                headers: { 'Authorization': `Bearer ${PTERO_KEY}` }
+            });
+
+            if (response) {
+                let data = response.data;
+                let attri = data.attributes;
+                return {
+                    type: data.object,
+                    isOwner: attri.server_owner,
+                    identifier: attri.identifier,
+                    internalId: attri.internal_id,
+                    uuid: attri.uuid,
+                    name: attri.name,
+                    node: attri.node,
+                    is_node_under_maintenance: attri.is_node_under_maintenance,
+                    description: attri.description,
+                    memory: attri.limits.memory,
+                    disk: attri.limits.disk,
+                    cpu: attri.limits.cpu,
+                    threads: attri.limits.threads,
+                    oom_disabled: attri.oom_disabled,
+                    invocation: attri.invocation,
+                    dockerImage: attri.docker_image,
+                    egg_features: attri.egg_features,
+                    databases: attri.feature_limits.databases,
+                    backups: attri.feature_limits.backups,
+                    status: attri.status,
+                    is_suspended: attri.is_suspended,
+                    is_installing: attri.is_installing,
+                    is_transferring: attri.is_transferring,
+                }
+            }
+        } catch (error) {
+            logger.error(error);
+            return false;
+        }
+    },
     getStatus: async (serverId = SERVER_ID) => {
         try {
             const response = await axios.get(`${PANEL_URL}/api/client/servers/${serverId}/resources`, {
                 headers: { 'Authorization': `Bearer ${PTERO_KEY}` }
             });
-            
-            if(response) {
+
+            if (response) {
                 return response.data.attributes.current_state;
             }
         } catch (error) {
@@ -39,15 +79,27 @@ module.exports = {
     },
     getResources: async (serverId = SERVER_ID) => {
         try {
-            const res = await axios.get(`${PANEL_URL}/api/servers/${serverId}/resources`, {
-                headers: {
-                    Authorization: `Bearer ${PTERO_KEY}`
-                }
+            const response = await axios.get(`${PANEL_URL}/api/client/servers/${serverId}/resources`, {
+                headers: { 'Authorization': `Bearer ${PTERO_KEY}` }
             });
 
-            return res.data.attributes;
-        } catch (e) {
-            logger.error(e);
+            if (response) {
+                let data = response.data.attributes;
+                let res = data.resources;
+
+                return {
+                    current_state: data.current_state,
+                    is_suspended: data.is_suspended,
+                    memoryBytes: res.memory_bytes,
+                    diskBytes: res.disk_bytes,
+                    cpuAbsolute: res.cpu_absolute,
+                    uptime: res.uptime,
+                    network_rxBytes: res.network_rx_bytes,
+                    network_txBytes: res.network_tx_bytes    
+                };
+            }
+        } catch (error) {
+            logger.error(error);
             return false;
         }
     }

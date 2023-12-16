@@ -47,11 +47,24 @@ module.exports = {
                     required: false
                 }
             ]
+        },
+        {
+            type: ApplicationCommandOptionType.Subcommand,
+            name: "info",
+            description: "Get Server Info",
+            options: [
+                {
+                    type: ApplicationCommandOptionType.String,
+                    name: "server-id",
+                    description: "Provide a server id to get info",
+                    required: false
+                }
+            ]
         }
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 
-        if(!config.pteroManager.enabled) {
+        if (!config.pteroManager.enabled) {
             return interaction.reply({ content: "Pterodactyl Manager is disabled", ephemeral: true });
         }
 
@@ -59,6 +72,70 @@ module.exports = {
 
         await interaction.deferReply({ ephemeral: false });
         switch (subCommand) {
+            case "info": {
+                const serverId = interaction.options.getString("server-id") || process.env.SERVER_ID;
+                const data = await ptero.getInfo(serverId);
+                if (!data) {
+                    interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle("Pterodactyl Manager")
+                                .setColor(Colors.Red)
+                                .setDescription(`> Failed to get info for (\`${serverId}\`)`)
+                                .setTimestamp(Date.now())
+                                .setFooter({ text: `Requested by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
+                        ]
+                    });
+                };
+
+                const embed = new EmbedBuilder()
+                    .setTitle("Pterodactyl Manager")
+                    .setColor(Colors.Aqua)
+                    .setDescription(`> Fetched server Info for (\`${serverId}\`)`)
+                    .setTimestamp(Date.now())
+                    .setFooter({ text: `Requested by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
+                    .setThumbnail(client.user.displayAvatarURL())
+                    .setFields([{
+                        name: "Basic Info",
+                        value: [
+                            "> **Startup Command**",
+                            "```",
+                            `${data.invocation}`,
+                            "```",
+                            "> **UUID**",
+                            "```",
+                            `${data.uuid}`,
+                            "```",
+                            "> **Name**",
+                            "```",
+                            `${data.name}`,
+                            "```",
+                            `> **Type/Node** • \`${data.type}\` • \`${data.node}\``,
+                            `> **Identifier/Internal-Id** • \`${data.identifier}\` • \`${data.internalId}\``,
+                            "> **Resources**",
+                            "```",
+                            "• Memory: " + data.memory,
+                            "• Disk: " + data.disk,
+                            "• CPU: " + data.cpu,
+                            "• Threads: " + data.threads,
+                            "```",
+                        ].join("\n")
+                    }]);
+
+                return interaction.editReply({ embeds: [embed] }).catch((e) => {
+                    interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle("Pterodactyl Manager")
+                                .setColor(Colors.Red)
+                                .setDescription(`> Failed to get info for (\`${serverId}\`)`)
+                                .setTimestamp(Date.now())
+                                .setFooter({ text: `Requested by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
+                        ]
+                    });
+                });
+            }
+
             case "power": {
                 const action = interaction.options.getString("action");
                 const serverId = interaction.options.getString("server-id") || process.env.SERVER_ID;
