@@ -15,6 +15,7 @@ Bot with better events, commands, databases, ptero manager and crash management.
 - Planned updates for additional commands and utilities.
 - Better database management.
 - Anti-crash system.
+- OpenAI support.
 
 ## Installation & Setup
 1. Ensure Node.js is installed.
@@ -41,12 +42,14 @@ npm start
 
 ## Upcoming Features
 - Addition of TypeScript support.
+- ChatBot support.
 
 ## Resources
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
 - [Sequelize Guide & Documentation](https://sequelize.org/docs/v6/getting-started/)
 - [Pterodactyl v1 API Reference](https://dashflo.net/docs/api/pterodactyl/v1/)
+- [OpenAI Docs](https://platform.openai.com/docs/introduction)
 
 ## Acknowledgments
 This project is a continuous effort. I will appreciate your feedbacks.
