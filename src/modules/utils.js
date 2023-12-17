@@ -3,7 +3,7 @@ const ms = require('ms');
 const path = require('path');
 
 module.exports = {
-    wait: (time) =>new Promise(resolve => setTimeout(resolve, ms(time))),
+    wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
 
     getFiles: (dir, onlyFolders = false) => {
         let _files = [];
