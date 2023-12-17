@@ -172,7 +172,7 @@ module.exports = {
                             }).catch(() => null);
                         };
 
-                        if (res && res !== 204) {
+                        if (res && res !== true) {
                             interaction.editReply({
                                 embeds: [
                                     new EmbedBuilder()

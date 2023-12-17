@@ -19,7 +19,6 @@ const client = new Client({
     failIfNotExists: false
 });
 
-
 logger.system(`Attempting to start bot..`);
 eventHandler(client);
 createDatabaseConnection();
