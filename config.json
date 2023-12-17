@@ -12,6 +12,9 @@
         "password": "-"
     },
     "pteroManager": {
-        "enabled": true
+        "enabled": false
+    },
+    "openAi": {
+        "enabled": false
     }
 }

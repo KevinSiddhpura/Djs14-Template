@@ -95,7 +95,7 @@ module.exports = {
                     cpuAbsolute: res.cpu_absolute,
                     uptime: res.uptime,
                     network_rxBytes: res.network_rx_bytes,
-                    network_txBytes: res.network_tx_bytes    
+                    network_txBytes: res.network_tx_bytes
                 };
             }
         } catch (error) {
