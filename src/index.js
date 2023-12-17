@@ -10,7 +10,7 @@ const logger = require("./modules/logger");
 const fs = require("fs");
 const { createDatabaseConnection } = require("./modules/handlers/database");
 
-if(!fs.existsSync("errors.log")) {
+if (!fs.existsSync("errors.log")) {
     fs.writeFileSync("errors.log", "");
 };
 
