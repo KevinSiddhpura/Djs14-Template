@@ -44,7 +44,8 @@ const createDatabaseConnection = async () => {
 const getDatabase = (tableName) => {
     const exists = database.isDefined(tableName);
     if (exists) {
-        return database.model(tableName);
+        const model = database.model(tableName);
+        return model;
     } else {
         return false;
     }

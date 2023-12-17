@@ -1,8 +1,9 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
 const { openai } = require("../../modules/openAi");
 const logger = require("../../modules/logger");
-const { wait } = require("../../modules/utils");
 const { config } = require("../..");
+const { getDatabase } = require("../../modules/handlers/database");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "openai",
@@ -23,36 +24,55 @@ module.exports = {
             name: "model",
             description: "Model to use for generating response",
             choices: [
-                {
-                    name: "🟢 GPT-3.5 Turbo",
-                    value: "gpt-3.5-turbo",      
-                },
-                {
-                    name: "🟡 GPT-4",
-                    value: "gpt-4",
-                }
+                { name: "🟢 GPT-3.5 Turbo", value: "gpt-3.5-turbo" },
+                { name: "🟡 GPT-4", value: "gpt-4" }
             ],
             required: false,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-
-        if(!config.openAi) {
+    execute: async (client, interaction) => {
+        if (!config.openAi) {
             return interaction.reply({ content: "OpenAI module is disabled", ephemeral: true });
         }
 
         await interaction.deferReply({ ephemeral: false });
+
+        const db = getDatabase("openai");
+        const clientId = client.user.id;
+        const userId = interaction.user.id;
         const prompt = interaction.options.getString("prompt");
         const respModel = interaction.options.getString("model") || "gpt-3.5-turbo";
 
-        await interaction.editReply({ content: `🤖 <@${interaction.user.id}>, please wait generating response can take up to 1 minute` });
-
-        await interaction.channel.sendTyping().catch(() => {});
-        await wait("2s");
-
         try {
-            const oldMsgs = await fetchPreviousMessages(interaction, client);
-            oldMsgs.push(createMessageObject('user', prompt, interaction.user.username));
+            const [data] = await db.findOrCreate({
+                where: {
+                    [Op.and]: [
+                        { clientId: clientId },
+                        { userId: userId }
+                    ]
+                },
+                defaults: {
+                    clientId,
+                    userId,
+                    prompts: JSON.stringify([]),
+                    responses: JSON.stringify([]),
+                    userRole: 'user',
+                    clientRole: 'assistant'
+                }
+            });
+
+            let prompts = JSON.parse(data.prompts || '[]');
+            let responses = JSON.parse(data.responses || '[]');
+
+            if (typeof prompt === 'string' && prompt.trim() !== '') {
+                prompts.push(prompt);
+                await db.update(
+                    { prompts: JSON.stringify(prompts) },
+                    { where: { clientId, userId } }
+                );
+            }
+
+            const oldMsgs = formatConversationForAPI(prompts, responses);
 
             const response = await openai.chat.completions.create({
                 model: respModel,
@@ -60,38 +80,59 @@ module.exports = {
             });
 
             const resMsg = response.choices[0].message.content;
-            const charLim = 1500;
+
+            if (typeof resMsg === 'string' && resMsg.trim() !== '') {
+                responses.push(resMsg);
+                await db.update(
+                    { responses: JSON.stringify(responses) },
+                    { where: { clientId, userId } }
+                );
+            }
+
+            const charLim = 4000;
             await handleResponse(interaction, resMsg, charLim);
         } catch (error) {
             logger.error(error);
-            await interaction.editReply({
-                content: `<@${interaction.user.id}>, an error occurred: ${error.message}`,
+            await interaction.editReply({ content: `Error occurred: ${error.message}` });
+        }
+    }
+};
+
+function formatConversationForAPI(prompts, responses) {
+    let formattedHistory = [];
+    let start = Math.max(0, prompts.length - 3);
+    for (let i = start; i < prompts.length; i++) {
+        formattedHistory.push({ role: 'user', content: prompts[i] });
+        if (responses[i]) {
+            formattedHistory.push({ role: 'assistant', content: responses[i] });
+        }
+    }
+    return formattedHistory;
+}
+
+async function handleResponse(interaction, resMsg, charLim) {
+    if (resMsg.length <= charLim) {
+        await interaction.editReply({
+            embeds: [createResponseEmbed(resMsg, interaction)]
+        });
+    } else {
+        for (let i = 0; i < resMsg.length; i += charLim) {
+            const part = resMsg.substring(i, Math.min(i + charLim, resMsg.length));
+            await interaction.followUp({
+                embeds: [createResponseEmbed(part, interaction)]
             });
         }
     }
 }
 
-async function fetchPreviousMessages(interaction, client) {
-    const prevMsgs = await interaction.channel.messages.fetch({ limit: 10 });
-    return prevMsgs.reverse().map(msg => {
-        if (msg.author.bot && msg.author.id !== client.user.id) return;
-        const role = msg.author.id === client.user.id ? "assistant" : "user";
-        return createMessageObject(role, msg.content, msg.author.username);
-    }).filter(Boolean);
-}
-
-function createMessageObject(role, content, name) {
-    return { role, content, name };
-}
-
-async function handleResponse(interaction, resMsg, charLim) {
-    if (resMsg.length <= charLim) {
-        await interaction.editReply({ content: resMsg });
-    } else {
-        await interaction.editReply({ content: resMsg.substring(0, charLim) });
-        for (let i = charLim; i < resMsg.length; i += charLim) {
-            const msg = resMsg.substring(i, Math.min(i + charLim, resMsg.length));
-            await interaction.followUp({ content: msg });
-        }
-    }
+function createResponseEmbed(message, interaction) {
+    return new EmbedBuilder()
+        .setColor(Colors.Aqua)
+        .setAuthor({ name: "OpenAI Response" })
+        .setDescription(message)
+        .setFooter({
+            text: `Requested by ${interaction.user.username}`,
+            iconURL: interaction.user.displayAvatarURL(),
+        })
+        .setTimestamp(Date.now());
 }
