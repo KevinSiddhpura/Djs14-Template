@@ -1,4 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
+const { openai } = require("../../modules/openAi");
+const logger = require("../../modules/logger");
+const { getDatabase } = require("../../modules/handlers/database");
 
 const cleanIt = (text) => {
     if (typeof (text) === "string") {
