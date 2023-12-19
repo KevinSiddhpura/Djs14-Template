@@ -43,21 +43,23 @@ module.exports = {
     },
 
     getChannel: (channel, guild) => {
-        let _channel = guild.channels.cache.get(c => c.name === channel) || guild.channels.cache.get(c => c.id === channel);
-        if(_channel) {
-            return _channel;
+        if(guild.channels.cache.get(c => c.name == channel)) {
+            return guild.channels.cache.get(c => c.name == channel);
+        } else if(guild.channels.cache.get(c => c.id == channel)) {
+            return guild.channels.cache.get(c => c.id == channel);
         } else {
             return false;
-        }
+        };
     },
 
     getRole: (role, guild) => {
-        let _role = guild.roles.cache.get(r => r.name === role) || guild.roles.cache.get(r => r.id === role);
-        if(_role) {
-            return _role;
+        if(guild.roles.cache.get(r => r.name == role)) {
+            return guild.roles.cache.get(r => r.name == role);
+        } else if(guild.roles.cache.get(r => r.id == role)) {
+            return guild.roles.cache.get(r => r.id == role);
         } else {
             return false;
-        }
+        };
     },
 
     findMember: async (memberId, guild) => {
