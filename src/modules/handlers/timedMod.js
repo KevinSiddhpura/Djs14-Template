@@ -66,14 +66,7 @@ module.exports = async () => {
                     }
 
                     await timedMuteDB.destroy({
-                        where: {
-                            [Op.and]: [
-                                {
-                                    userId: member.id,
-                                    guildId: guild.id
-                                }
-                            ]
-                        }
+                        where: { userId: member.id, guildId: guild.id }
                     });
                     wait("1s");
                 }
@@ -105,14 +98,7 @@ module.exports = async () => {
                     await guild.bans.remove(user).catch(() => { });
                 };
                 await timedBanDB.destroy({
-                    where: {
-                        [Op.and]: [
-                            {
-                                userId: user.id,
-                                guildId: guild.id
-                            }
-                        ]
-                    }
+                    where: { userId: member.id, guildId: guild.id }
                 });
                 wait("1s");
             }
