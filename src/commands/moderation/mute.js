@@ -71,10 +71,9 @@ module.exports = {
         }
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        const role = getRole(config.mutedRole, interaction.guild);
-        if(!role) {
-            await interaction.reply({ content: "Muted role not found", ephemeral: true });
-            return;
+        const role = await getRole(config.mutedRole, interaction.guild);
+        if (!role) {
+            return interaction.reply({ content: "Muted role not found", ephemeral: true });
         }
 
         await interaction.deferReply({ ephemeral: true });
@@ -179,7 +178,7 @@ module.exports = {
                 action: time === "n/a" ? "mute" : "temp-mute",
                 moderator: interaction.user.id,
                 member: user.id,
-                timed: false,
+                timed: time === "n/a" ? false : time,
                 message,
                 timeStamp: interaction.createdTimestamp,
             };

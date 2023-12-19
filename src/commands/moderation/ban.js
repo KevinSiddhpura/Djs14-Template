@@ -154,7 +154,7 @@ module.exports = {
                     ]
                 });
 
-                // await member.ban({ reason: message });
+                await member.ban({ reason: message });
             } catch (e) {
                 console.log(e);
             }
@@ -168,7 +168,7 @@ module.exports = {
                 action: time === "n/a" ? "ban" : "temp-ban",
                 moderator: interaction.user.id,
                 member: user.id,
-                timed: false,
+                timed: time === "n/a" ? false : time,
                 message,
                 timeStamp: interaction.createdTimestamp,
             };
