@@ -42,25 +42,20 @@ module.exports = {
         return commands;
     },
 
-    getChannel: (channel, guild) => {
-        if(guild.channels.cache.get(c => c.name == channel)) {
-            return guild.channels.cache.get(c => c.name == channel);
-        } else if(guild.channels.cache.get(c => c.id == channel)) {
-            return guild.channels.cache.get(c => c.id == channel);
-        } else {
-            return false;
-        };
+    getChannel: async (channel, guild) => {
+        const channels = await guild.channels.fetch();
+        let _channel = channels.find(c => c.id === channel);
+        if (!_channel) _channel = channels.find(c => c.name === channel);
+        return _channel || false;
     },
 
-    getRole: (role, guild) => {
-        if(guild.roles.cache.get(r => r.name == role)) {
-            return guild.roles.cache.get(r => r.name == role);
-        } else if(guild.roles.cache.get(r => r.id == role)) {
-            return guild.roles.cache.get(r => r.id == role);
-        } else {
-            return false;
-        };
+    getRole: async (role, guild) => {
+        const roles = await guild.roles.fetch();
+        let _role = roles.find(r => r.id === role);
+        if (!_role) _role = roles.find(r => r.name === role);
+        return _role || false;
     },
+    
 
     findMember: async (memberId, guild) => {
         let _member = await guild.members.fetch(memberId);
