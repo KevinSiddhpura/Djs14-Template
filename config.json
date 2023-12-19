@@ -1,13 +1,13 @@
 {
     "devs": [],
     "serverID": "-",
-    "extraStartUpLogs": false,
+    "extraStartUpLogs": true,
     "database": {
-        "createConnection": true,
+        "createConnection": false,
         "type": "mysql",
         "database": "-",
         "host": "-",
-        "port": 3006,
+        "port": 3306,
         "username": "-",
         "password": "-"
     },
@@ -16,5 +16,6 @@
     },
     "openAi": {
         "enabled": false
-    }
+    },
+    "mutedRole": "Muted"
 }
