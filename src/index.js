@@ -1,17 +1,18 @@
 console.clear();
-const crashHandler = require("./modules/handlers/crashHandler");
+const logger = require("./modules/logger");
+logger.system(`Attempting to start bot..`);
+const crashHandler = require("./modules/handlers/crash");
 crashHandler();
 
 require("dotenv").config();
 const { Client } = require("discord.js");
-const eventHandler = require("./modules/handlers/eventHandler");
+const eventHandler = require("./modules/handlers/events");
 const config = require("../config.json");
-const logger = require("./modules/logger");
 const fs = require("fs");
 const { createDatabaseConnection } = require("./modules/handlers/database");
 
-if (!fs.existsSync("errors.log")) {
-    fs.writeFileSync("errors.log", "");
+if (!fs.existsSync("./data/errors.log")) {
+    fs.writeFileSync("./data/errors.log", "");
 };
 
 const client = new Client({
@@ -19,7 +20,6 @@ const client = new Client({
     failIfNotExists: false
 });
 
-logger.system(`Attempting to start bot..`);
 eventHandler(client);
 createDatabaseConnection();
 

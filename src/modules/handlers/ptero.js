@@ -1,5 +1,5 @@
-const config = require("../../config.json");
-const logger = require("./logger");
+const config = require("../../../config.json");
+const logger = require("../logger");
 const axios = require("axios");
 
 const PANEL_URL = process.env.PANEL_URL;

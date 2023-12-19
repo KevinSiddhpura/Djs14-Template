@@ -1,7 +1,7 @@
 const fs = require("fs");
 const logger = require("../logger");
 
-const errorFile = fs.createWriteStream("errors.log", {
+const errorFile = fs.createWriteStream("./data/errors.log", {
     encoding: "utf-8"
 });
 

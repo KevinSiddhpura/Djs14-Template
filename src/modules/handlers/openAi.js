@@ -1,5 +1,5 @@
 const { OpenAI } = require("openai");
-const { config } = require("../index.js");
+const config = require("../../../config.json");
 
 if (!config.openAi) return;
 

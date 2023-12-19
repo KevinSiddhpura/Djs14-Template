@@ -1,5 +1,5 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
-const ptero = require("../../modules/ptero");
+const ptero = require("../../modules/handlers/ptero");
 const ms = require("ms");
 const config = require("../../../config.json");
 

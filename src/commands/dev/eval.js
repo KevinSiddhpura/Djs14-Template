@@ -1,5 +1,5 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
-const { openai } = require("../../modules/openAi");
+const { openai } = require("../../modules/handlers/openAi");
 const logger = require("../../modules/logger");
 const { getDatabase } = require("../../modules/handlers/database");
 
