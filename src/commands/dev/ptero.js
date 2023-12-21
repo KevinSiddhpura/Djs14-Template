@@ -5,7 +5,7 @@ const config = require("../../../config.json");
 
 module.exports = {
     name: "ptero",
-    category: "Dev",
+    category: "Developer",
     description: "Pterodactyl Manager",
     devOnly: false,
     disabled: false,
