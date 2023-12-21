@@ -1,5 +1,5 @@
 const { Client, CommandInteraction, EmbedBuilder, ActionRowBuilder, Colors, StringSelectMenuBuilder } = require("discord.js");
-const { getCommands } = require("../../modules/utils");
+const { getCommands, capitalizeFirstLetter } = require("../../modules/utils");
 
 module.exports = {
     name: "help",
@@ -46,13 +46,13 @@ module.exports = {
         });
 
         const filter = (i) => {
-            i.deferUpdate();
             return i.customId === 'select-category' && i.user.id === interaction.user.id;
         };
 
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
 
         collector.on('collect', async (i) => {
+            i.deferUpdate();
             const selectedCategory = i.values[0];
             const categoryCommands = commands.filter(cmd => cmd.category === selectedCategory);
 
@@ -64,7 +64,7 @@ module.exports = {
                         .addFields(
                             categoryCommands.map(c => {
                                 return {
-                                    name: `**/${c.name}**`,
+                                    name: `**/${capitalizeFirstLetter(c.name)}**`,
                                     value: [
                                         "```",
                                         `Description: ${c.description}`,
