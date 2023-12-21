@@ -1,19 +1,25 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
 
 module.exports = {
-    name: "history",
+    name: "unban",
     category: "Moderation",
-    description: "Fetch infractions history",
+    description: "Unban a user",
     devOnly: false,
     disabled: false,
-    roleRequired: ["Mod"],
+    roleRequired: ["Admin"],
     options: [
         {
             type: ApplicationCommandOptionType.User,
             name: "member",
-            description: "Mention the user to fetch infractions history",
+            description: "Mention the user to unban",
             required: true,
         },
+        {
+            type: ApplicationCommandOptionType.String,
+            name: "reason",
+            description: "Reason for the unban",
+            required: false,
+        }
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         

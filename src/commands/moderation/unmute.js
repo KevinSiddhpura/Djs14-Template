@@ -1,9 +1,9 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
 
 module.exports = {
-    name: "history",
+    name: "unmute",
     category: "Moderation",
-    description: "Fetch infractions history",
+    description: "Unmute a user",
     devOnly: false,
     disabled: false,
     roleRequired: ["Mod"],
@@ -11,9 +11,15 @@ module.exports = {
         {
             type: ApplicationCommandOptionType.User,
             name: "member",
-            description: "Mention the user to fetch infractions history",
+            description: "Mention the user to unmute",
             required: true,
         },
+        {
+            type: ApplicationCommandOptionType.String,
+            name: "reason",
+            description: "Reason for the unmute",
+            required: false,
+        }
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         
