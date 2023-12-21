@@ -55,14 +55,25 @@ module.exports = {
         if (!_role) _role = roles.find(r => r.name === role);
         return _role || false;
     },
-    
 
     findMember: async (memberId, guild) => {
         let _member = await guild.members.fetch(memberId);
-        if(_member) {
+        if (_member) {
             return _member;
         } else {
             return false;
         }
+    },
+
+    capitalizeFirstLetter: (string) => {
+        if (!string) return string;
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+
+    capitalizeFirstLetterOfEachWord: (string) => {
+        if (!string) return string;
+        return string.split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
     }
 }
