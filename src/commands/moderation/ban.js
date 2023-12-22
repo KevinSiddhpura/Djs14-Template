@@ -84,6 +84,8 @@ module.exports = {
             }
         });
 
+        if(data.currentBan && data.currentBan.length > 0) return interaction.editReply("This user is already temp-banned");
+
         let exp = expires == "permanent" ? "It's Permanent" : `<t:${((ms(expires) + interaction.createdTimestamp) / 1000).toFixed(0)}:f>`;
 
         try {
