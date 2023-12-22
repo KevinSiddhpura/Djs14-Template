@@ -63,6 +63,16 @@ module.exports = {
             }
         });
 
+        if(data.currentMute && data.currentMute.length > 0) return interaction.editReply("This user is already temp-muted");
+
+        try {
+            await member.roles.add(_role.id);
+        } catch (e) {
+            return interaction.editReply({
+                content: "I can't mute the mentioned user",
+            })
+        }
+
         let exp = expires == "permanent" ? "It's Permanent" : `<t:${((ms(expires) + interaction.createdTimestamp) / 1000).toFixed(0)}:f>`;
 
         try {
@@ -83,8 +93,6 @@ module.exports = {
                 ]
             })
         } catch (e) {}
-
-        await member.roles.add(_role.id);
 
         if (expires !== "permanent") {
             await data.update({
