@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 const formatMultiline = (prefix, message) => {
     return message.split('\n').map((line, index) => {
-        return index === 0 ? `${prefix} ${line}` : `${' '.repeat(prefix.length)} ${line}`;
+        return index === 0 ? `${prefix} ${line}` : `${''.repeat(prefix.length)} ${line}`;
     }).join('\n');
 }
 
