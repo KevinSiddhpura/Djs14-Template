@@ -38,27 +38,6 @@ module.exports = {
         }
 
         const db = getDatabase("infractions");
-        const [data, exists] = await db.findOrCreate({
-            where: {
-                userId: user.id
-            },
-            defaults: {
-                userId: user.id,
-                history: JSON.stringify([]),
-                currentMute: JSON.stringify([]),
-                currentBan: JSON.stringify([]),
-            }
-        });
-
-        await data.update({
-            history: JSON.stringify([...JSON.parse(data.history), {
-                action: "kick",
-                member: user.id,
-                moderator: interaction.user.id,
-                reason: reason,
-                timestamp: interaction.createdTimestamp
-            }])
-        });
 
         try {
             await member.send({
@@ -69,9 +48,8 @@ module.exports = {
                             iconURL: client.user.displayAvatarURL()
                         })
                         .setColor(Colors.Red)
-                        .setThumbnail("https://cdn.discordapp.com/attachments/1162773061888659456/1187447426378891264/ham.gif?ex=6596eb98&is=65847698&hm=6bb84c96811cb47a95d4dd6ddf163762760819e5a8a8034e75947edc62e2647c&")
                         .setDescription([
-                            `- **Moderator** • <@${interaction.user.id}>`,
+                            `- **Moderator** • **\`${interaction.user.username}\`** | (${interaction.user.id})`,
                             `- **Reason** • ${reason}`,
                             `- **Timestamp** • <t:${(interaction.createdTimestamp / 1000).toFixed(0)}:R>`
                         ].join("\n"))
@@ -81,23 +59,21 @@ module.exports = {
                         })
                 ]
             })
-        } catch (e) {
-
-        }
+        } catch (e) { }
 
         await member.kick();
-        await data.update({
-            history: JSON.stringify([...JSON.parse(data.history), {
-                action: "kick",
-                member: user.id,
-                moderator: interaction.user.id,
-                reason: reason,
-                timestamp: interaction.createdTimestamp
-            }])
-        });
+        await db.create({
+            user: user.id,
+            moderator: interaction.user.id,
+            action: "kick",
+            reason: reason,
+            active: false,
+            given: interaction.createdTimestamp,
+            expires: "-",
+        })
 
         return interaction.editReply({
-            content: "**Kicked** <@" + member.id + "> successfully",
+            content: "**Kicked** <@" + user.id + "> successfully",
         });
     }
 }

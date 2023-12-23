@@ -1,6 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, Colors, EmbedBuilder } = require("discord.js");
 const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "ban",
@@ -72,21 +73,17 @@ module.exports = {
 
         const db = getDatabase("infractions");
 
-        const [data, exists] = await db.findOrCreate({
+        const user_data = await db.findAll({
             where: {
-                userId: member.id
-            },
-            defaults: {
-                userId: member.id,
-                history: JSON.stringify([]),
-                currentMute: JSON.stringify([]),
-                currentBan: JSON.stringify([]),
+                user: user.id,
+                action: {
+                    [Op.or]: ["ban", "temp-ban"],
+                },
+                active: true
             }
         });
 
-        if(data.currentBan && data.currentBan.length > 0) return interaction.editReply("This user is already temp-banned");
-
-        let exp = expires == "permanent" ? "It's Permanent" : `<t:${((ms(expires) + interaction.createdTimestamp) / 1000).toFixed(0)}:f>`;
+        if (user_data.length > 0) return interaction.editReply("User is already banned");
 
         try {
             await member.send({
@@ -97,11 +94,10 @@ module.exports = {
                             iconURL: client.user.displayAvatarURL()
                         })
                         .setColor(Colors.Red)
-                        .setThumbnail("https://cdn.discordapp.com/attachments/1162773061888659456/1187447426378891264/ham.gif?ex=6596eb98&is=65847698&hm=6bb84c96811cb47a95d4dd6ddf163762760819e5a8a8034e75947edc62e2647c&")
                         .setDescription([
-                            `- **Moderator** • <@${interaction.user.id}>`,
+                            `- **Moderator** • **\`${interaction.user.username}\`** | (${interaction.user.id})`,
                             `- **Reason** • ${reason}`,
-                            `- **Expires** • ${exp}`,
+                            `- **Expires** • ${expires == "permanent" ? "It's Permanent" : `<t:${((ms(expires) + interaction.createdTimestamp) / 1000).toFixed(0)}:f>`}`,
                             `- **Timestamp** • <t:${(interaction.createdTimestamp / 1000).toFixed(0)}:R>`
                         ].join("\n"))
                         .setFooter({
@@ -113,42 +109,34 @@ module.exports = {
         } catch (e) {}
 
         if (expires !== "permanent") {
-            await data.update({
-                history: JSON.stringify([...JSON.parse(data.history), {
-                    action: expires == "permanent" ? "ban" : "temp-ban",
-                    member: member.id,
-                    moderator: interaction.user.id,
-                    reason: reason,
-                    expires: expires,
-                    timestamp: interaction.createdTimestamp
-                }]),
-                currentBan: JSON.stringify({
-                    userId: member.id,
-                    expires: ((interaction.createdTimestamp + (ms(expires)) / 1000).toFixed(0)),
-                })
-            });
+            await db.create({
+                user: user.id,
+                moderator: interaction.user.id,
+                action: "temp-ban",
+                reason: reason,
+                given: interaction.createdTimestamp,
+                expires: (ms(expires) + interaction.createdTimestamp),
+            })
 
-            await member.ban({ reason });
+            await member.ban();
 
             return interaction.editReply({
-                content: "**Temp-Banned** <@" + member.id + "> successfully",
+                content: "**Temp-Banned** <@" + user.id + "> successfully",
             });
         } else {
-            await data.update({
-                history: JSON.stringify([...JSON.parse(data.history), {
-                    action: "ban",
-                    member: member.id,
-                    moderator: interaction.user.id,
-                    reason: reason,
-                    expires: expires,
-                    timestamp: interaction.createdTimestamp
-                }])
-            });
+            await db.create({
+                user: user.id,
+                moderator: interaction.user.id,
+                action: "ban",
+                reason: reason,
+                given: interaction.createdTimestamp,
+                expires: "permanent",
+            })
 
-            await member.ban({ reason });
+            await member.ban();
 
             return interaction.editReply({
-                content: "**Banned** <@" + member.id + "> successfully",
+                content: "**Banned** <@" + user.id + "> successfully",
             });
         }
     }

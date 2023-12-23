@@ -1,5 +1,6 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "unban",
@@ -23,17 +24,27 @@ module.exports = {
         const db = getDatabase("infractions");
         const bannedUsers = await interaction.guild.bans.fetch();
 
-        const data = await db.findOne({
+        const data = await db.findAll({
             where: {
-                userId: userId,
+                user: userId,
+                action: {
+                    [Op.or]: ["ban", "temp-ban"],
+                },
+                active: true
             },
         });
 
-        if (data && data.currentBan) {
-            await data.update({
-                currentBan: JSON.stringify([]),
-            });
-        };
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                await db.update({
+                    active: false
+                }, {
+                    where: {
+                        infID: data[i].infID
+                    }
+                });
+            }
+        }
 
         if (!bannedUsers.has(userId)) {
             return interaction.editReply("User is not banned");

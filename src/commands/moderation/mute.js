@@ -3,6 +3,7 @@ const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
 const { config } = require("../..");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "mute",
@@ -28,9 +29,31 @@ module.exports = {
             type: ApplicationCommandOptionType.String,
             name: "expires",
             description: "Select time to expire the mute",
-            choices: [
-                // Same choices as in your ban command
-            ],
+            choices: [{
+                name: "1 hour",
+                value: "1h",
+            }, {
+                name: "6 hours",
+                value: "6h",
+            }, {
+                name: "12 hours",
+                value: "12h",
+            }, {
+                name: "1 day",
+                value: "1d",
+            }, {
+                name: "3 days",
+                value: "3d",
+            }, {
+                name: "1 week",
+                value: "7d",
+            }, {
+                name: "3 weeks",
+                value: "21d",
+            }, {
+                name: "1 month",
+                value: "30d",
+            }],
             required: false,
         }
     ],
@@ -47,23 +70,21 @@ module.exports = {
         };
 
         const _role = await getRole(config.mutedRole, interaction.guild);
-        if(!_role) return interaction.editReply("Muted role not found");
+        if (!_role) return interaction.editReply("Muted role not found");
 
         const db = getDatabase("infractions");
 
-        const [data, exists] = await db.findOrCreate({
+        const user_data = await db.findAll({
             where: {
-                userId: member.id
-            },
-            defaults: {
-                userId: member.id,
-                history: JSON.stringify([]),
-                currentMute: JSON.stringify([]),
-                currentBan: JSON.stringify([]),
+                user: user.id,
+                action: {
+                    [Op.or]: ["mute", "temp-mute"],
+                },
+                active: true
             }
         });
 
-        if(data.currentMute && data.currentMute.length > 0) return interaction.editReply("This user is already temp-muted");
+        if (user_data.length > 0) return interaction.editReply("User is already muted");
 
         try {
             await member.roles.add(_role.id);
@@ -72,8 +93,6 @@ module.exports = {
                 content: "I can't mute the mentioned user",
             })
         }
-
-        let exp = expires == "permanent" ? "It's Permanent" : `<t:${((ms(expires) + interaction.createdTimestamp) / 1000).toFixed(0)}:f>`;
 
         try {
             await member.send({
@@ -85,48 +104,40 @@ module.exports = {
                         })
                         .setColor(Colors.Red)
                         .setDescription([
-                            `- **Moderator** • <@${interaction.user.id}>`,
+                            `- **Moderator** • **\`${interaction.user.username}\`** | (${interaction.user.id})`,
                             `- **Reason** • ${reason}`,
-                            `- **Expires** • ${exp}`,
+                            `- **Expires** • ${expires == "permanent" ? "It's Permanent" : `<t:${((ms(expires) + interaction.createdTimestamp) / 1000).toFixed(0)}:f>`}`,
                             `- **Timestamp** • <t:${(interaction.createdTimestamp / 1000).toFixed(0)}:R>`
                         ].join("\n"))
                 ]
             })
-        } catch (e) {}
+        } catch (e) { }
 
         if (expires !== "permanent") {
-            await data.update({
-                history: JSON.stringify([...JSON.parse(data.history), {
-                    action: "temp-mute",
-                    member: member.id,
-                    moderator: interaction.user.id,
-                    reason: reason,
-                    expires: expires,
-                    timestamp: interaction.createdTimestamp
-                }]),
-                currentMute: JSON.stringify({
-                    userId: member.id,
-                    expires: ((interaction.createdTimestamp + (ms(expires)) / 1000).toFixed(0)),
-                })
-            });
-
+            await db.create({
+                user: user.id,
+                moderator: interaction.user.id,
+                action: "temp-mute",
+                reason: reason,
+                active: true,
+                given: interaction.createdTimestamp,
+                expires: (interaction.createdTimestamp + ms(expires))
+            })
             return interaction.editReply({
-                content: "**Temporarily Muted** <@" + member.id + "> successfully",
+                content: "**Temporarily Muted** <@" + user.id + "> successfully",
             });
         } else {
-            await data.update({
-                history: JSON.stringify([...JSON.parse(data.history), {
-                    action: "mute",
-                    member: member.id,
-                    moderator: interaction.user.id,
-                    reason: reason,
-                    expires: expires,
-                    timestamp: interaction.createdTimestamp
-                }])
-            });
-
+            await db.create({
+                user: user.id,
+                moderator: interaction.user.id,
+                action: "mute",
+                reason: reason,
+                active: true,
+                given: interaction.createdTimestamp,
+                expires: "permanent"
+            })
             return interaction.editReply({
-                content: "**Muted** <@" + member.id + "> successfully",
+                content: "**Muted** <@" + user.id + "> successfully",
             });
         }
     }

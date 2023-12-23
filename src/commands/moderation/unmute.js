@@ -2,6 +2,7 @@ const { ApplicationCommandOptionType, Client, CommandInteraction } = require("di
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
 const { config } = require("../..");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "unmute",
@@ -29,23 +30,33 @@ module.exports = {
         };
 
         const role = await getRole(config.mutedRole, interaction.guild);
-        if(!role) {
+        if (!role) {
             return interaction.editReply("Muted role not found");
         }
 
         const db = getDatabase("infractions");
 
-        const data = await db.findOne({
+        const data = await db.findAll({
             where: {
-                userId: member.id
+                user: user.id,
+                action: {
+                    [Op.or]: ["mute", "temp-mute"],
+                },
+                active: true
             },
         });
-        
-        if(data && data.currentMute.length > 0) {
-            await data.update({
-                currentMute: JSON.stringify([]),
-            });
-        };
+
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                await db.update({
+                    active: false
+                }, {
+                    where: {
+                        infID: data[i].infID
+                    }
+                });
+            }
+        }
 
         try {
             await member.roles.remove(role.id);
@@ -53,6 +64,6 @@ module.exports = {
 
         }
 
-        return interaction.editReply("User has been unmuted");
+        return interaction.editReply(`**Unmuted** <@${user.id}> successfully`);
     }
 }
