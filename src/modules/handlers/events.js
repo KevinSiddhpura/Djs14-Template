@@ -12,7 +12,7 @@ module.exports = (client) => {
         client.on(name, async (args) => {
             for (const file of files) {
                 const evFunction = require(file);
-                await evFunction(client, args);
+                evFunction(client, args);
             }
         })
     }
