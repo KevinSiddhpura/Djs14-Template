@@ -5,7 +5,7 @@ const crashHandler = require("./modules/handlers/crash");
 crashHandler();
 
 require("dotenv").config();
-const { Client } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
 const eventHandler = require("./modules/handlers/events");
 const config = require("../config.json");
 const fs = require("fs");
@@ -16,7 +16,7 @@ if (!fs.existsSync("./data/errors.log")) {
 };
 
 const client = new Client({
-    intents: 3243773,
+    intents: Object.keys(GatewayIntentBits),
     failIfNotExists: false
 });
 
