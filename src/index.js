@@ -7,7 +7,6 @@ crashHandler();
 require("dotenv").config();
 const { Client, GatewayIntentBits } = require("discord.js");
 const eventHandler = require("./modules/handlers/events");
-const config = require("../config.json");
 const fs = require("fs");
 const { createDatabaseConnection } = require("./modules/handlers/database");
 
@@ -25,4 +24,4 @@ createDatabaseConnection();
 
 client.login(process.env.TOKEN).catch(e => console.error(e));
 
-module.exports = { client, config };
+module.exports = { client };

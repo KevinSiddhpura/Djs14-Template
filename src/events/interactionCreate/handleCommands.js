@@ -1,6 +1,6 @@
 const { Client } = require("discord.js");
 const { getCommands } = require("../../modules/utils");
-const { config } = require("../..");
+const config = require("../../../config");
 
 module.exports = ( /**@type {Client} */ client, interaction) => {
     if (!interaction.isCommand()) return;

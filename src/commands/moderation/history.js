@@ -1,5 +1,6 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, Colors } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
+const config = require("../../../config");
 
 module.exports = {
     name: "history",
@@ -17,6 +18,14 @@ module.exports = {
         },
     ],
     execute: async (client, interaction) => {
+
+        if(!config.createDbConnection) {
+            return interaction.reply({
+                content: "Database connection is not enabled",
+                ephemeral: true,
+            });
+        }
+
         await interaction.deferReply({ ephemeral: false });
 
         const user = interaction.options.getUser("user");

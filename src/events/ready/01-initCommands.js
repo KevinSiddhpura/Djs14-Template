@@ -1,7 +1,7 @@
 const { REST, Routes, Client } = require("discord.js");
 const { getCommands } = require("../../modules/utils");
-const { config } = require("../..");
 const logger = require("../../modules/logger");
+const config = require("../../../config");
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 

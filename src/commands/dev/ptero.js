@@ -1,7 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
 const ptero = require("../../modules/handlers/ptero");
 const ms = require("ms");
-const config = require("../../../config.json");
+const config = require("../../../config");
 
 module.exports = {
     name: "ptero",
@@ -64,7 +64,7 @@ module.exports = {
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 
-        if (!config.pteroManager.enabled) {
+        if (!config.enablePteroManager) {
             return interaction.reply({ content: "Pterodactyl Manager is disabled", ephemeral: true });
         }
 

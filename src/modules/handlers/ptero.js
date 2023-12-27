@@ -1,4 +1,4 @@
-const config = require("../../../config.json");
+const config = require("../../../config");
 const logger = require("../logger");
 const axios = require("axios");
 
@@ -6,7 +6,7 @@ const PANEL_URL = process.env.PANEL_URL;
 const SERVER_ID = process.env.SERVER_ID;
 const PTERO_KEY = process.env.PTERO_KEY;
 
-if (!config.pteroManager.enabled) {
+if (!config.enablePteroManager) {
     logger.warn('Pterodactyl Manager is disabled in the config.');
     return;
 }

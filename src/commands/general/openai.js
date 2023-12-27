@@ -1,9 +1,9 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder, Colors } = require("discord.js");
 const { openai } = require("../../modules/handlers/openAi");
 const logger = require("../../modules/logger");
-const { config } = require("../..");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
+const config = require("../../../config");
 
 module.exports = {
     name: "openai",
@@ -31,7 +31,7 @@ module.exports = {
         }
     ],
     execute: async (client, interaction) => {
-        if (!config.openAi) {
+        if (!config.enableOpenAiSupport) {
             return interaction.reply({ content: "OpenAI module is disabled", ephemeral: true });
         }
 

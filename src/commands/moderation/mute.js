@@ -2,8 +2,8 @@ const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, 
 const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
-const { config } = require("../..");
 const { Op } = require("sequelize");
+const config = require("../../../config");
 
 module.exports = {
     name: "mute",
@@ -58,6 +58,14 @@ module.exports = {
         }
     ],
     execute: async (client, interaction) => {
+
+        if(!config.createDbConnection) {
+            return interaction.reply({
+                content: "Database connection is not enabled",
+                ephemeral: true,
+            });
+        }
+
         await interaction.deferReply({ ephemeral: true });
 
         const user = interaction.options.getUser("member");

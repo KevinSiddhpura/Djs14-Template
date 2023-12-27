@@ -2,6 +2,7 @@ const { ApplicationCommandOptionType, Client, CommandInteraction, Colors, EmbedB
 const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
+const config = require("../../../config");
 
 module.exports = {
     name: "ban",
@@ -55,7 +56,15 @@ module.exports = {
             required: false,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {        
+        
+        if(!config.createDbConnection) {
+            return interaction.reply({
+                content: "Database connection is not enabled",
+                ephemeral: true,
+            });
+        }
+
         await interaction.deferReply({ ephemeral: true });
 
         const user = interaction.options.getUser("member");

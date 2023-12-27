@@ -2,6 +2,7 @@ const { ApplicationCommandOptionType, Client, CommandInteraction } = require("di
 const { openai } = require("../../modules/handlers/openAi");
 const logger = require("../../modules/logger");
 const { getDatabase } = require("../../modules/handlers/database");
+const config = require("../../../config");
 
 const cleanIt = (text) => {
     if (typeof (text) === "string") {

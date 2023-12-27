@@ -1,11 +1,11 @@
 const { Client, GuildMember } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
-const { config } = require("../..");
 const logger = require("../../modules/logger");
+const config = require("../../../config");
 
 module.exports = async ( /**@type {Client} */ client, /**@type {GuildMember} */ member) => {
-    if (!config.userJoinRoles.enabled) return;
+    if (!config.createDbConnection || !config.userJoinRoles.enabled) return;
 
     const guild = member.guild;
     const db = getDatabase("savedRoles");
