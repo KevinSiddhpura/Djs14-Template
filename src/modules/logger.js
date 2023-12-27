@@ -23,6 +23,9 @@ module.exports = {
         console.log(formatMultiline(chalk.red.bold('=[ ERROR  ] •'), message.toString()));
     },
     update: (message) => {
-        console.log(formatMultiline(chalk.magenta.bold('=[ UPDATE ] •'), message.toString()));
+        console.log(formatMultiline(chalk.gray.bold('=[ UPDATE ] •'), message.toString()));
+    },
+    music: (message) => {
+        console.log(formatMultiline(chalk.magenta.bold('=[ MUSIC  ] •'), message.toString()));
     }
 }
