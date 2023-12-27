@@ -2,7 +2,7 @@ const { getFiles } = require("../utils");
 const path = require("path");
 
 module.exports = (client) => {
-    const folders = getFiles(path.join(__dirname, "..", "..", "events"), true);
+    const folders = getFiles(path.join(__dirname, "..", "..", "events", "discordjs"), true);
 
     for (const folder of folders) {
         const files = getFiles(folder);
