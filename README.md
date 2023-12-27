@@ -52,8 +52,8 @@ npm start
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
 - [Sequelize Guide & Documentation](https://sequelize.org/docs/v6/getting-started/)
 - [Pterodactyl v1 API Reference](https://dashflo.net/docs/api/pterodactyl/v1/)
-- [OpenAI Docs](https://platform.openai.com/docs/introduction)
-- [Erela.js Docs - (Not Maintained)](https://guides.menudocs.org/topics/erelajs/)
+- [OpenAI Documentation](https://platform.openai.com/docs/introduction)
+- [Erela.js Documentation - (Not Maintained)](https://guides.menudocs.org/topics/erelajs/)
 
 ## Acknowledgments
 This project is a continuous effort. I will appreciate your feedbacks.
