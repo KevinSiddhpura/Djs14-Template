@@ -9,10 +9,10 @@ module.exports = (client) => {
         files.sort((a, b) => a > b);
 
         const name = folder.replace(/\\/g, '/').split('/').pop();
-        client.on(name, async (args) => {
+        client.on(name, async (...args) => {
             for (const file of files) {
                 const evFunction = require(file);
-                evFunction(client, args);
+                await evFunction(client, ...args);
             }
         })
     }

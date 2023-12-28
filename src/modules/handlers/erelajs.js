@@ -9,9 +9,9 @@ module.exports = (manager) => {
 
     for (const file of files) {
         const name = file.replace(/\\/g, '/').split('/').pop().split('.').shift();
-        manager.on(name, async (args) => {
+        manager.on(name, async (...args) => {
             const evFunction = require(file);
-            evFunction(args);
+            await evFunction(manager, ...args);
         });
     }
 }
