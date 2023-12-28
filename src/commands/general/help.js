@@ -1,4 +1,4 @@
-const { Client, CommandInteraction, EmbedBuilder, ActionRowBuilder, Colors, StringSelectMenuBuilder } = require("discord.js");
+const { Client, CommandInteraction, EmbedBuilder, ActionRowBuilder, Colors, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require("discord.js");
 const { getCommands, capitalizeFirstLetter } = require("../../modules/utils");
 
 module.exports = {
@@ -30,12 +30,12 @@ module.exports = {
 
         const row = new ActionRowBuilder().addComponents(categorySelectMenu);
 
-        await interaction.editReply({
+        const msg = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Help Menu")
                     .setColor(Colors.Aqua)
-                    .setDescription("> Select a category to view commands. \n- The menu will expire in **1 minute**")
+                    .setDescription("> Select a category to view commands.\n- The menu will expire in **1 minute**")
                     .setFooter({
                         text: `Requested by ${interaction.user.username}`,
                         iconURL: interaction.user.displayAvatarURL()
@@ -46,44 +46,101 @@ module.exports = {
             components: [row]
         });
 
-        const filter = (i) => {
-            return i.customId === 'select-category' && i.user.id === interaction.user.id;
-        };
+        const selectMenuFilter = (i) => i.customId === 'select-category' && i.user.id === interaction.user.id;
+        const buttonFilter = (i) => (i.customId === 'previous' || i.customId === 'next') && i.user.id === interaction.user.id;
 
-        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+        const selectMenuCollector = msg.createMessageComponentCollector({ filter: selectMenuFilter, time: 60000 });
 
-        collector.on('collect', async (i) => {
-            i.deferUpdate();
+        selectMenuCollector.on('collect', async (i) => {
+            await i.deferUpdate().catch(() => {})
             const selectedCategory = i.values[0];
             const categoryCommands = commands.filter(cmd => cmd.category === selectedCategory);
+            let page = 0;
+            const pageSize = 5;
+            const totalPages = Math.ceil(categoryCommands.length / pageSize);
 
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setTitle(`${selectedCategory} Commands`)
-                        .setDescription(`- Commands in the **${selectedCategory}** category.`)
-                        .addFields(
-                            categoryCommands.map(c => {
-                                return {
-                                    name: `**/${capitalizeFirstLetter(c.name)}**`,
-                                    value: [
-                                        `>>> _${c.description}_`,
-                                    ].join("\n")
-                                };
-                            })
-                        )
-                        .setFooter({
-                            text: `Requested by ${interaction.user.username}`,
-                            iconURL: interaction.user.displayAvatarURL()
+            const updateEmbed = (page) => {
+                const startIndex = page * pageSize;
+                const endIndex = startIndex + pageSize;
+                const commandsPage = categoryCommands.slice(startIndex, endIndex);
+
+                return new EmbedBuilder()
+                    .setTitle(`${selectedCategory} Commands`)
+                    .setDescription(`- Commands in the **${selectedCategory}** category.`)
+                    .setThumbnail(client.user.displayAvatarURL())
+                    .addFields(
+                        commandsPage.map(c => {
+                            return {
+                                name: `**/${capitalizeFirstLetter(c.name)}**`,
+                                value: `>>> _${c.description}_`
+                            };
                         })
-                        .setTimestamp(Date.now())
-                        .setColor("Aqua")
-                ],
-                components: [row]
+                    )
+                    .setFooter({
+                        text: `Page ${page + 1} of ${totalPages} | Requested by ${interaction.user.username}`,
+                        iconURL: interaction.user.displayAvatarURL()
+                    })
+                    .setTimestamp(Date.now())
+                    .setColor(Colors.Aqua);
+            };
+
+            const paginationRow = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('previous')
+                        .setLabel('Previous')
+                        .setStyle(ButtonStyle.Primary)
+                        .setDisabled(page === 0),
+                    new ButtonBuilder()
+                        .setCustomId('next')
+                        .setLabel('Next')
+                        .setStyle(ButtonStyle.Primary)
+                        .setDisabled(page === totalPages - 1)
+                );
+
+            await i.editReply({
+                embeds: [updateEmbed(page)],
+                components: [paginationRow, row]
+            });
+
+            const buttonCollector = msg.createMessageComponentCollector({ filter: buttonFilter, time: 60000 });
+
+            buttonCollector.on('collect', async (buttonInteraction) => {
+                if (buttonInteraction.customId === 'previous' && page > 0) {
+                    page--;
+                } else if (buttonInteraction.customId === 'next' && page < totalPages - 1) {
+                    page++;
+                } else {
+                    return;
+                }
+            
+                const updatedPaginationRow = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('previous')
+                            .setLabel('Previous')
+                            .setStyle(ButtonStyle.Primary)
+                            .setDisabled(page === 0),
+                        new ButtonBuilder()
+                            .setCustomId('next')
+                            .setLabel('Next')
+                            .setStyle(ButtonStyle.Primary)
+                            .setDisabled(page === totalPages - 1)
+                    );
+            
+                await buttonInteraction.deferUpdate().catch(() => {});
+                await buttonInteraction.editReply({
+                    embeds: [updateEmbed(page)],
+                    components: [updatedPaginationRow, row]
+                });
+            });
+
+            buttonCollector.on('end', () => {
+                interaction.editReply({ components: [] });
             });
         });
 
-        collector.on('end', () => {
+        selectMenuCollector.on('end', () => {
             interaction.editReply({ components: [] });
         });
     }
