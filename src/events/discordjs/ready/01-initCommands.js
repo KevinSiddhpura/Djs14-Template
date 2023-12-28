@@ -5,6 +5,10 @@ const config = require("../../../../config");
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
+/**
+ * @param {Client} client 
+ */
+
 module.exports = async (/**@type {Client} */ client) => {
     try {
         const commands = getCommands().map((c) => {
@@ -15,7 +19,7 @@ module.exports = async (/**@type {Client} */ client) => {
             };
         });
 
-        if(config.serverID === "") {
+        if (config.serverID === "") {
             logger.error("Server ID not set in config.json");
             return process.exit(1);
         }

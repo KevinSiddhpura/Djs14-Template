@@ -4,7 +4,12 @@ const { getRole } = require("../../../modules/utils");
 const logger = require("../../../modules/logger");
 const config = require("../../../../config");
 
-module.exports = async ( /**@type {Client} */ client, /**@type {GuildMember} */ member) => {
+/**
+ * @param {Client} client 
+ * @param {GuildMember} member 
+ */
+
+module.exports = async (client, member) => {
     if (!config.createDbConnection || !config.userJoinRoles.enabled) return;
 
     const guild = member.guild;

@@ -42,15 +42,15 @@ module.exports = {
         return commands;
     },
 
-    getChannel: async (channel, guild) => {
-        const channels = await guild.channels.fetch();
+    getChannel: (channel, guild) => {
+        const channels = guild.channels.cache;
         let _channel = channels.find(c => c.id === channel);
         if (!_channel) _channel = channels.find(c => c.name === channel);
         return _channel || false;
     },
 
-    getRole: async (role, guild) => {
-        const roles = await guild.roles.fetch();
+    getRole: (role, guild) => {
+        const roles = guild.roles.cache;
         let _role = roles.find(r => r.id === role);
         if (!_role) _role = roles.find(r => r.name === role);
         return _role || false;
@@ -63,6 +63,10 @@ module.exports = {
         } else {
             return false;
         }
+    },
+
+    getRandomIntBetween: (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1) + min);
     },
 
     capitalizeFirstLetter: (string) => {
