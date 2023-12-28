@@ -8,7 +8,8 @@ module.exports = {
     description: "Select from queue/track loop",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: ["music-commands"],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.String,

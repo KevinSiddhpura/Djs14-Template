@@ -3,12 +3,13 @@ const { manager } = require("../..");
 const config = require("../../../config");
 
 module.exports = {
-    name: "unmute",
+    name: "unmute-player",
     category: "Music",
     description: "Unmute the player",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: ["music-commands"],
+    roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         

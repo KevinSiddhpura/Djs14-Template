@@ -8,6 +8,7 @@ module.exports = {
     description: "Fetch infractions history",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Mod"],
     options: [
         {

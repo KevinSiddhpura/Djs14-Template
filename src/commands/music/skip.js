@@ -8,7 +8,8 @@ module.exports = {
     description: "Skip the current song/to a song in the queue",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: ["music-commands"],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.Integer,

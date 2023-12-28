@@ -7,7 +7,8 @@ module.exports = {
     description: "About this project",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: [],
+    roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         return interaction.reply({

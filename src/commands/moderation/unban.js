@@ -9,6 +9,7 @@ module.exports = {
     description: "Unban a user",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Admin"],
     options: [
         {

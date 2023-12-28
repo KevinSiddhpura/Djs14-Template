@@ -11,7 +11,8 @@ module.exports = {
     description: "Get response from OpenAI",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: ["commands"],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.String,

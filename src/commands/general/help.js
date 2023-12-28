@@ -7,7 +7,8 @@ module.exports = {
     description: "Shows all commands.",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: ["commands"],
+    roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         await interaction.deferReply({ ephemeral: false });

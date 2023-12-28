@@ -6,7 +6,8 @@ module.exports = {
     description: "Get the bot's ping and ws latency.",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: [],
+    roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 

@@ -8,6 +8,7 @@ module.exports = {
     description: "Kick a member",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Mod"],
     options: [
         {

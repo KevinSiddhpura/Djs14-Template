@@ -8,6 +8,7 @@ module.exports = {
     description: "Warns a user",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Mod"],
     options: [
         {

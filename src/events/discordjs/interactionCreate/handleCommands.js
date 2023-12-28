@@ -17,25 +17,41 @@ module.exports = ( /**@type {Client} */ client, interaction) => {
             });
         };
 
-        if (command.roleRequired !== false) {
-            const rolesArray = command.roleRequired;
-            const memberRoles = interaction.member.roles;
-            if (!memberRoles.cache.some(r => rolesArray.includes(r.name))) {
-                if(!memberRoles.cache.some(r => rolesArray.includes(r.id))) {
-                    return interaction.reply({
-                        content: "You are not allowed to use this command!",
-                        ephemeral: true
-                    });
-                }
-            }
-        }
-
         if (command.disabled) {
             return interaction.reply({
                 content: "This command is currently disabled!",
                 ephemeral: true
             });
         };
+
+        if (command.roleRequired && command.roleRequired !== false) {
+            const rolesArray = command.roleRequired;
+            const memberRoles = interaction.member.roles;
+            if(rolesArray.length) {
+                if (!memberRoles.cache.some(r => rolesArray.includes(r.name))) {
+                    if (!memberRoles.cache.some(r => rolesArray.includes(r.id))) {
+                        return interaction.reply({
+                            content: "You are not allowed to use this command!",
+                            ephemeral: true
+                        });
+                    }
+                }
+            }
+        }
+
+        if (command.channelOnly && command.channelOnly !== false) {
+            const channelsArray = command.channelOnly;
+            if(channelsArray.length) {
+                if (!channelsArray.includes(interaction.channel.name)) {
+                    if (!channelsArray.includes(interaction.channel.id)) {
+                        return interaction.reply({
+                            content: "You are not allowed to use this command in this channel!",
+                            ephemeral: true
+                        });
+                    }
+                }
+            }
+        }
 
         command.execute(client, interaction);
     } catch (e) {

@@ -6,7 +6,8 @@ module.exports = {
     description: "Get the avatar of a user",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: [],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.User,

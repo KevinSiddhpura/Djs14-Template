@@ -11,6 +11,7 @@ module.exports = {
     description: "Mute a user",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Mod"],
     options: [
         {

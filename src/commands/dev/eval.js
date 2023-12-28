@@ -18,7 +18,8 @@ module.exports = {
     description: "Evaluates JavaScript code.",
     devOnly: true,
     disabled: false,
-    roleRequired: false,
+    channelOnly: [],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.String,

@@ -10,6 +10,7 @@ module.exports = {
     description: "Ban a user",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Admin"],
     options: [
         {

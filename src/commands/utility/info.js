@@ -9,7 +9,8 @@ module.exports = {
     description: "Get info about server or specific user",
     devOnly: false,
     disabled: false,
-    roleRequired: false,
+    channelOnly: [],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.Subcommand,

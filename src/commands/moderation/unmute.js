@@ -10,6 +10,7 @@ module.exports = {
     description: "Unmute a user",
     devOnly: false,
     disabled: false,
+    channelOnly: [],
     roleRequired: ["Mod"],
     options: [
         {

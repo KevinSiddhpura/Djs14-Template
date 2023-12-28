@@ -6,7 +6,8 @@ module.exports = {
     description: "-",
     devOnly: true,
     disabled: true,
-    roleRequired: ["Admin"], // False = No role required
+    channelOnly: ["commands"], // false/[] = works in all the channels
+    roleRequired: ["Members"], // false/[] = works in all the channels
     options: [
         {
             type: ApplicationCommandOptionType.String,

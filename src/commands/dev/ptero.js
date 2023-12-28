@@ -9,7 +9,8 @@ module.exports = {
     description: "Pterodactyl Manager",
     devOnly: false,
     disabled: false,
-    roleRequired: ["Admin"],
+    channelOnly: [],
+    roleRequired: [],
     options: [
         {
             type: ApplicationCommandOptionType.Subcommand,
