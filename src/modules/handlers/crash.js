@@ -20,7 +20,7 @@ const logError = (type, error) => {
 
 module.exports = () => {
     process.on("uncaughtException", (error, origin) => {
-        logError("uncaughtException", error.stack == undefined ? error : error.stack);
+        logError("uncaughtException", error.stack ? error.stack : error);
     });
 
     process.on("unhandledRejection", (reason) => {
