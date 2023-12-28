@@ -1,7 +1,7 @@
 {
   "name": "djs14-bot",
   "version": "1.0.0",
-  "description": "Discord bot template",
+  "description": "Discord.js v14 Bot",
   "main": "src/index.js",
   "type": "commonjs",
   "scripts": {
@@ -13,7 +13,7 @@
     "Discord Bot"
   ],
   "author": "KevinSidd",
-  "license": "ISC",
+  "license": "GPLv3",
   "dependencies": {
     "axios": "^1.6.2",
     "chalk": "^4.1.2",
