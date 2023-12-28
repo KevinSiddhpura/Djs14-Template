@@ -7,7 +7,7 @@ module.exports = {
     description: "Shows all commands.",
     devOnly: false,
     disabled: false,
-    channelOnly: [],
+    channelOnly: ["commands"],
     roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {

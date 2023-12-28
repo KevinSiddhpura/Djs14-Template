@@ -7,7 +7,7 @@ module.exports = {
     name: "ptero",
     category: "Developer",
     description: "Pterodactyl Manager",
-    devOnly: false,
+    devOnly: true,
     disabled: false,
     channelOnly: [],
     roleRequired: [],

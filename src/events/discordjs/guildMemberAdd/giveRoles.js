@@ -31,7 +31,7 @@ module.exports = async ( /**@type {Client} */ client, /**@type {GuildMember} */ 
             }
         });
 
-        if (data) return;
+        if (!data) return;
 
         const oldRoles = JSON.parse(data.roles);
         const oldServerRoles = [];
