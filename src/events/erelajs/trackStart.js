@@ -2,7 +2,7 @@ const { EmbedBuilder } = require("@discordjs/builders");
 const { client, manager } = require("../..")
 const { Colors } = require("discord.js");
 
-module.exports = (player, track) => {
+module.exports = (manager, player, track) => {
     const options = player.options;
 
     const guild = client.guilds.cache.get(options.guild);

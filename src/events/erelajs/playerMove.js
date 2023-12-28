@@ -1,8 +1,6 @@
-const { manager } = require("../..");
-const logger = require("../../modules/logger")
-
-module.exports = (player, oldChannel, newChannel) => {
-    console.log('Player:', player);
-    console.log('Old Channel:', oldChannel);
-    console.log('New Channel:', newChannel);
+module.exports = async (manager, player, oldChannel, newChannel) => {
+    if (newChannel) {
+        await player.setVoiceChannel(newChannel);
+        if (player.paused) player.pause(false);
+    }
 };
