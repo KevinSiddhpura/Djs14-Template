@@ -1,4 +1,5 @@
 const logger = require("./modules/logger");
+logger.system("Attempting to start bot, might take some time");
 const crashHandler = require("./modules/handlers/crash");
 crashHandler();
 
