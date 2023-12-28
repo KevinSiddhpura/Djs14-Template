@@ -26,8 +26,8 @@ module.exports = {
 
         await interaction.deferReply({ ephemeral: false });
 
-        const voiceChannel = interaction.member.voice.channelId;
-        if (!voiceChannel) return interaction.reply({
+        const voiceConnection = interaction.member.voice.channel;
+        if (!voiceConnection) return interaction.reply({
             content: "You must be in a voice channel!",
             ephemeral: true,
         })
@@ -36,7 +36,7 @@ module.exports = {
         if (!player) {
             player = manager.create({
                 guild: interaction.guild.id,
-                voiceChannel,
+                voiceChannel: voiceConnection.id,
                 textChannel: interaction.channelId,
                 selfDeafen: false,
                 selfMute: false,
@@ -44,7 +44,7 @@ module.exports = {
             });
         };
 
-        if (player && player.playing && player.voiceChannel !== voiceChannel) return interaction.reply({
+        if (player && player.playing && player.voiceChannel !== voiceConnection.id) return interaction.editReply({
             content: "You must be in the same voice channel as me!",
             ephemeral: true,
         });
@@ -82,21 +82,18 @@ module.exports = {
                 let title = res.tracks[0].title;
                 if (title.includes("*")) title = title.replaceAll("*", "");
                 if (title.includes("`")) title = title.replaceAll("`", "");
-                if (title.length > 38) title = title.substring(0, 38) + "...";
+                if (title.length > 45) title = title.substring(0, 45) + "...";
 
                 return interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor(Colors.Blurple)
                             .setAuthor({
-                                name: "Added track to the queue",
-                                iconURL: client.user.displayAvatarURL({ dynamic: true }),
+                                name: "Added track to the queue"
                             })
                             .setDescription([
-                                `- **\` Title  \`** • [**\`${title}\`**](${res.tracks[0].uri})`,
-                                `- **\` Author \`** • _${res.tracks[0].author}_`,
+                                `- [**${title}**](${res.tracks[0].uri})`,
                             ].join("\n"))
-                            .setThumbnail("https://cdn.discordapp.com/attachments/995980173755305996/1005068015861239849/logo.gif")
                             .setFooter({
                                 text: `Requested by ${interaction.user.username}`,
                                 iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
@@ -114,14 +111,12 @@ module.exports = {
                         new EmbedBuilder()
                         .setColor(Colors.Blurple)
                         .setAuthor({
-                            name: "Added playlist to the queue",
-                            iconURL: client.user.displayAvatarURL({ dynamic: true }),
+                            name: "Added playlist to the queue"
                         })
                         .setDescription([
                             `- **\` Playlist Title  \`** • [**\`${res[res.playlist ? "playlist" : "playlistInfo"].name || "Unknown"}\`**](${search})`,
                             `- **\` Playlist Tracks \`** • ${player.queue.size}`,
                         ].join("\n"))
-                        .setThumbnail("https://cdn.discordapp.com/attachments/995980173755305996/1005068015861239849/logo.gif")
                             .setFooter({
                                 text: `Requested by ${interaction.user.username}`,
                                 iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
