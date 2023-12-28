@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("@discordjs/builders");
-const { client, manager } = require("../..")
+const { client } = require("../..")
 const { Colors } = require("discord.js");
 
 module.exports = (manager, player, track) => {
