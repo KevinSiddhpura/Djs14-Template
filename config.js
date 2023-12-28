@@ -2,11 +2,11 @@ module.exports = {
     // Put bot id here
     botID: "-",
     // Put in developer IDs here
-    devs: ["-"],
+    devs: [],
     // Put in server ID here
     serverID: "-",
     // Get more info on what's starting
-    extraStartUpLogs: true,
+    extraStartUpLogs: false,
     // Music Support
     musicSupport: {
         enabled: false,
@@ -18,7 +18,7 @@ module.exports = {
             retryDelay: 5000
         }],
         spotify: {
-            enabled: false,
+            enabled: true,
             // Get id from https://developer.spotify.com/documentation/general/guides/authorization/app-settings/
             clientID: "-",
             // Get secret from https://developer.spotify.com/dashboard/applications
@@ -36,8 +36,8 @@ module.exports = {
     mutedRole: "Muted",
     // Auto give roles
     userJoinRoles: {
-        enabled: false,
-        defaultRoles: [ "Members"],
+        enabled: true,
+        defaultRoles: [ "Members" ],
         // Give previous stored role
         // Triggers when user joins back
         giveOldRoles: false
