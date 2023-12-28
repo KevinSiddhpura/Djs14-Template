@@ -12,6 +12,13 @@ module.exports = {
     roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        
+        if(!config.musicSupport.enabled) return interaction.reply({
+            content: "Music support is disabled!",
+            ephemeral: true,
+        });
+
+        return interaction.reply({
+            content: "Not coded yet"
+        });
     }
 }

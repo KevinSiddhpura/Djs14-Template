@@ -7,7 +7,7 @@ module.exports = {
     description: "Shows all commands.",
     devOnly: false,
     disabled: false,
-    channelOnly: ["commands"],
+    channelOnly: [],
     roleRequired: [],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
@@ -67,9 +67,7 @@ module.exports = {
                                 return {
                                     name: `**/${capitalizeFirstLetter(c.name)}**`,
                                     value: [
-                                        "```",
-                                        `Description: ${c.description}`,
-                                        "```"
+                                        `>>> _${c.description}_`,
                                     ].join("\n")
                                 };
                             })

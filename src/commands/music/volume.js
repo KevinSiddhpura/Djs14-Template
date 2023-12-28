@@ -40,6 +40,25 @@ module.exports = {
         }
     ],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        
+        if(!config.musicSupport.enabled) return interaction.reply({
+            content: "Music support is disabled!",
+            ephemeral: true,
+        });
+
+        const player = manager.get(interaction.guild.id);
+        if(!player) {
+            return interaction.reply({
+                content: "No active player found",
+                ephemeral: true,
+            });
+        }
+
+        const setVolume = parseInt(interaction.options.getString("set"));
+
+        player.setVolume(setVolume);
+
+        return interaction.reply({
+            content: "🔊 • Player volume changed to **" + setVolume + "%**"
+        });
     }
 }
