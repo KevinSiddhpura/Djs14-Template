@@ -11,12 +11,19 @@ module.exports = {
     musicSupport: {
         enabled: false,
         nodes: [{
-            name: "-",
             host: "-",
             port: 0,
             password: "-",
-            secure: false,
+            retryAmount: 5,
+            retryDelay: 5000
         }],
+        spotify: {
+            enabled: false,
+            // Get id from https://developer.spotify.com/documentation/general/guides/authorization/app-settings/
+            clientID: "-",
+            // Get secret from https://developer.spotify.com/dashboard/applications
+            clientSecret: "-",
+        }
     },
     // Connect to MSQL
     createDbConnection: false,
