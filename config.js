@@ -37,9 +37,51 @@ module.exports = {
     // Auto give roles
     userJoinRoles: {
         enabled: true,
-        defaultRoles: [ "Members" ],
+        defaultRoles: ["Members"],
         // Give previous stored role
         // Triggers when user joins back
         giveOldRoles: false
+    },
+    // Level System
+    levelSystem: {
+        enabled: false,
+        // XP per message
+        minXpPerMessage: 1,
+        maxXpPerMessage: 4,
+        // Multipliers
+        roleXpMultiplier: {
+            enabled: true,
+            roles: [
+                { role: "R1", multiplier: "1.5" },
+                { role: "R2", multiplier: "2" }
+            ],
+        },
+        // Level:XP requirement
+        levelXp: {
+            1: 100,
+            2: 200,
+            3: 300,
+            4: 400,
+            5: 500,
+            6: 600,
+            7: 700,
+            10: 800,
+        },
+        // Role rewards
+        roleRewards: {
+            enabled: true,
+            reward: [
+                { level: 1, role: "Level 1" },
+                { level: 2, role: "Level 2" },
+                { level: 3, role: "Level 3" },
+                { level: 4, role: "Level 4" },
+                { level: 5, role: "Level 5" },
+                { level: 6, role: "Level 6" },
+                { level: 7, role: "Level 7" },
+                { level: 8, role: "Level 8" },
+                { level: 9, role: "Level 9" },
+                { level: 10, role: "Level 10" },
+            ]
+        },
     }
 }
