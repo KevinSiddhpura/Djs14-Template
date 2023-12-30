@@ -1,5 +1,4 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
-const { getDatabase } = require("../src/modules/handlers/database");
 
 module.exports = {
     name: "-",
