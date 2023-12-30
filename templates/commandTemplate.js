@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
+const { getDatabase } = require("../src/modules/handlers/database");
 
 module.exports = {
     name: "-",
@@ -8,18 +9,8 @@ module.exports = {
     disabled: true,
     channelOnly: ["commands"], // false/[] = works in all the channels
     roleRequired: ["Members"], // false/[] = works in all the channels
-    options: [
-        {
-            type: ApplicationCommandOptionType.String,
-            name: "code",
-            description: "Code to eval",
-            required: true,
-        }
-    ],
+    options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        interaction.reply({
-            content: "Your command logic goes here!",
-            ephemeral: true,
-        })
+        
     }
 }
