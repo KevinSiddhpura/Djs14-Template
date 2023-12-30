@@ -1,6 +1,8 @@
 const fs = require('fs');
 const ms = require('ms');
 const path = require('path');
+const config = require('../../config');
+const logger = require('./logger');
 
 module.exports = {
     wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
@@ -79,5 +81,65 @@ module.exports = {
         return string.split(' ').map(word =>
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ');
+    },
+
+    updateXP: async (db, user, type, xpChange, guild, manualUpdate = false) => {
+        let data = await db.findOne({ where: { user: user.id } });
+
+        if (!data) {
+            data = await db.create({ user: user.id, xp: 0, level: 0, messages: 0 });
+        }
+
+        let newXp = data.xp;
+
+        if (type == "add") {
+            newXp += xpChange;
+        } else if (type == "remove") {
+            newXp -= xpChange;
+        };
+
+        let newLevel = data.level;
+
+        while (config.levelSystem.levelXp[newLevel + 1] && newXp >= config.levelSystem.levelXp[newLevel + 1]) {
+            newLevel++;
+        }
+
+        while (newXp < config.levelSystem.levelXp[newLevel] && newLevel > 0) {
+            newLevel--;
+        }
+
+        await data.update({ xp: newXp, level: newLevel, messages: manualUpdate ? data.messages : data.messages + 1 });
+
+        if (config.levelSystem.roleRewards.enabled && guild) {
+            const member = guild.members.cache.get(user.id);
+            if (!member) return false;
+
+            const rolesToBeAdded = [];
+            const rolesToBeRemoved = [];
+
+            config.levelSystem.roleRewards.reward.forEach(reward => {
+                const role = guild.roles.cache.find(r => r.name === reward.role || r.id === reward.role);
+                if (!role) {
+                    logger.error(`Role ${reward.role} not found!`);
+                    return;
+                }
+
+                if (newLevel >= reward.level && !member.roles.cache.has(role.id)) {
+                    rolesToBeAdded.push(role.id);
+                } else if (newLevel < reward.level && member.roles.cache.has(role.id)) {
+                    rolesToBeRemoved.push(role.id);
+                }
+            });
+
+            if (rolesToBeAdded.length > 0) {
+                await member.roles.add([...rolesToBeAdded], "Level up reward");
+            };
+
+            if (rolesToBeRemoved.length > 0) {
+                await member.roles.remove([...rolesToBeRemoved], "Level down adjustment");
+            };
+        }
+
+        return data;
     }
 }
