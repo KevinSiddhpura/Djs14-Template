@@ -5,8 +5,8 @@ module.exports = {
     name: "-",
     category: "-",
     description: "-",
-    devOnly: true,
-    disabled: true,
+    devOnly: false,
+    disabled: false,
     channelOnly: ["commands"], // false/[] = works in all the channels
     roleRequired: ["Members"], // false/[] = works in all the channels
     options: [],
