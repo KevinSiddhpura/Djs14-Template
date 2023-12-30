@@ -1,8 +1,8 @@
 const { Sequelize } = require("sequelize");
-const utils = require("../utils");
 const path = require("path");
 const logger = require("../logger");
 const config = require("../../../config");
+const { getFiles } = require("../utils");
 
 if(!config.createDbConnection) return;
 
@@ -17,7 +17,7 @@ const database = new Sequelize({
 });
 
 const files = [];
-const folder = utils.getFiles(path.join(__dirname, "..", "..", "schemas"));
+const folder = getFiles(path.join(__dirname, "..", "..", "schemas"));
 
 for (const f of folder) {
     const data = require(f);
