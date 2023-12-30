@@ -1,7 +1,6 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
 const config = require("../../../config");
 const { manager } = require("../..");
-const { getDatabase } = require("../../modules/handlers/database");
 
 module.exports = {
     name: "music",

@@ -2,25 +2,30 @@ const fs = require("fs");
 const logger = require("../logger");
 
 const errorFile = fs.createWriteStream("./data/errors.log", {
+    flags: "a",
     encoding: "utf-8"
 });
 
+const formatErrorMessage = (error) => {
+    return error.replace(/\n/g, "\\n");
+};
+
 const logError = (type, error) => {
     const timeStamp = new Date().toISOString();
+    const formattedError = formatErrorMessage(error.stack || error.toString());
+    const logMessage = `${timeStamp} - ${type}: ${formattedError}\n\n`;
+    errorFile.write(logMessage);
+
     if (type === "uncaughtException") {
-        const logMessage = `${timeStamp} - ${type}: ${error}\n\n`;
-        errorFile.write(logMessage);
-        logger.error(`UncaughtException • ${error}`);
+        logger.error(`UncaughtException • ${formattedError}`);
     } else if (type === "unhandledRejection") {
-        const logMessage = `${timeStamp} - ${type}: ${error}\n\n`;
-        errorFile.write(logMessage);
-        logger.error(`UnhandledRejection • ${error}`);
+        logger.error(`UnhandledRejection • ${formattedError}`);
     }
 }
 
 module.exports = () => {
     process.on("uncaughtException", (error, origin) => {
-        logError("uncaughtException", error.stack ? error.stack : error);
+        logError("uncaughtException", error);
     });
 
     process.on("unhandledRejection", (reason) => {
