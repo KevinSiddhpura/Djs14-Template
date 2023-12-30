@@ -2,7 +2,7 @@ const { Client, CommandInteraction, EmbedBuilder } = require("discord.js");
 
 module.exports = {
     name: "ping",
-    category: "Utility",
+    category: "General",
     description: "Get the bot's ping and ws latency.",
     devOnly: false,
     disabled: false,

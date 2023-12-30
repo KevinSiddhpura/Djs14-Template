@@ -2,7 +2,7 @@ const { ApplicationCommandOptionType, CommandInteraction, Client, EmbedBuilder, 
 
 module.exports = {
     name: "avatar",
-    category: "Utility",
+    category: "General",
     description: "Get the avatar of a user",
     devOnly: false,
     disabled: false,

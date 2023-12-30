@@ -5,7 +5,7 @@ const logger = require("../../modules/logger");
 
 module.exports = {
     name: "info",
-    category: "Utility",
+    category: "General",
     description: "Get info about server or specific user",
     devOnly: false,
     disabled: false,
