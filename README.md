@@ -17,6 +17,7 @@ Bot with better events, commands, databases, ptero manager, music manager and cr
 - Anti-crash system.
 - OpenAI support.
 - Erela.js support for music.
+- Leveling system & rewards.
 
 ## Installation & Setup
 1. Ensure Node.js is installed.
