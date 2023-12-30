@@ -2,7 +2,7 @@ const { ApplicationCommandOptionType, Client, CommandInteraction } = require("di
 
 module.exports = {
     name: "purge",
-    category: "Moderation",
+    category: "Staff",
     description: "Clear chat messages",
     devOnly: false,
     disabled: false,

@@ -6,7 +6,7 @@ const config = require("../../../config");
 
 module.exports = {
     name: "unmute",
-    category: "Moderation",
+    category: "Staff",
     description: "Unmute a user",
     devOnly: false,
     disabled: false,

@@ -4,7 +4,7 @@ const config = require("../../../config");
 
 module.exports = {
     name: "warn",
-    category: "Moderation",
+    category: "Staff",
     description: "Warns a user",
     devOnly: false,
     disabled: false,

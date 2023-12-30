@@ -5,7 +5,7 @@ const config = require("../../../config");
 
 module.exports = {
     name: "unban",
-    category: "Moderation",
+    category: "Staff",
     description: "Unban a user",
     devOnly: false,
     disabled: false,

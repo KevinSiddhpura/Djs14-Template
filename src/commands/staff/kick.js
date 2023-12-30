@@ -4,7 +4,7 @@ const config = require("../../../config");
 
 module.exports = {
     name: "kick",
-    category: "Moderation",
+    category: "Staff",
     description: "Kick a member",
     devOnly: false,
     disabled: false,

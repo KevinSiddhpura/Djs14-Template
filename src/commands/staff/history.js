@@ -4,7 +4,7 @@ const config = require("../../../config");
 
 module.exports = {
     name: "history",
-    category: "Moderation",
+    category: "Staff",
     description: "Fetch infractions history",
     devOnly: false,
     disabled: false,

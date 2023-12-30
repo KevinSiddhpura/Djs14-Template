@@ -7,7 +7,7 @@ const config = require("../../../config");
 
 module.exports = {
     name: "mute",
-    category: "Moderation",
+    category: "Staff",
     description: "Mute a user",
     devOnly: false,
     disabled: false,
