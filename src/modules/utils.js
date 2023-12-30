@@ -46,16 +46,36 @@ module.exports = {
 
     getChannel: (channel, guild) => {
         const channels = guild.channels.cache;
-        let _channel = channels.find(c => c.id === channel);
-        if (!_channel) _channel = channels.find(c => c.name === channel);
-        return _channel || false;
+        if (Array.isArray(channel)) {
+            let _channels = [];
+            for (const _c of channel) {
+                let _channel = channels.find(c => c.id === _c);
+                if (!_channel) _channel = channels.find(c => c.name === _c);
+                if (_channel !== undefined) _channels.push(_channel);
+            }
+            return _channels;
+        } else {
+            let _channel = channels.find(c => c.id === channel);
+            if (!_channel) _channel = channels.find(c => c.name === channel);
+            return _channel || false;
+        }
     },
 
     getRole: (role, guild) => {
         const roles = guild.roles.cache;
-        let _role = roles.find(r => r.id === role);
-        if (!_role) _role = roles.find(r => r.name === role);
-        return _role || false;
+        if (Array.isArray(role)) {
+            let _roles = [];
+            for (const _r of role) {
+                let _role = roles.find(r => r.id === _r);
+                if (!_role) _role = roles.find(r => r.name === _r);
+                if (_role !== undefined) _roles.push(_role);
+            }
+            return _roles;
+        } else {
+            let _role = roles.find(r => r.id === role);
+            if (!_role) _role = roles.find(r => r.name === role);
+            return _role || false;
+        }
     },
 
     findMember: async (memberId, guild) => {
@@ -118,7 +138,7 @@ module.exports = {
             const rolesToBeRemoved = [];
 
             config.levelSystem.roleRewards.reward.forEach(reward => {
-                const role = guild.roles.cache.find(r => r.name === reward.role || r.id === reward.role);
+                const role = module.exports.getRole(reward.role, guild);
                 if (!role) {
                     logger.error(`Role ${reward.role} not found!`);
                     return;
