@@ -14,7 +14,7 @@ const cleanIt = (text) => {
 
 module.exports = {
     name: "eval",
-    category: "Developer",
+    category: "Admin",
     description: "Evaluates JavaScript code.",
     devOnly: true,
     disabled: false,
