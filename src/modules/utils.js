@@ -2,6 +2,7 @@ const fs = require('fs');
 const ms = require('ms');
 const path = require('path');
 const config = require('../../config');
+const axios = require('axios');
 const logger = require('./logger');
 
 module.exports = {
@@ -101,6 +102,28 @@ module.exports = {
         return string.split(' ').map(word =>
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ');
+    },
+
+    paste: (text, raw = false, paste_site = config.pastebinURL || "https://paste.kwin.in") => {
+        return new Promise((resolve, reject) => {
+            if (!text) {
+                reject("Invalid text.");
+                return;
+            }
+
+            axios.post(`${paste_site}/documents`, text)
+                .then(response => {
+                    const json = response.data;
+                    if (!json || !json.key) {
+                        reject("Invalid response from paste site: " + response);
+                        return;
+                    }
+                    resolve(`${paste_site}${raw ? "/raw" : ""}/${json.key}`);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
     },
 
     updateXP: async (db, user, type, xpChange, guild, manualUpdate = false) => {
