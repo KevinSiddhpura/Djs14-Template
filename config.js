@@ -7,6 +7,8 @@ module.exports = {
     serverID: "-",
     // Get more info on what's starting
     extraStartUpLogs: false,
+    // PasteBin URL
+    pastebinURL: "-",
     // Music Support
     musicSupport: {
         enabled: false,
