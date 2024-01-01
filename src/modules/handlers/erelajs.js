@@ -11,7 +11,7 @@ module.exports = (manager) => {
         const name = file.replace(/\\/g, '/').split('/').pop().split('.').shift();
         manager.on(name, async (...args) => {
             const evFunction = require(file);
-            await evFunction(manager, ...args);
+            evFunction(manager, ...args);
         });
     }
 }
