@@ -46,7 +46,6 @@ module.exports = {
             const output = cleanIt(evaled);
 
             const embeds = [];
-            let currentOutput = '';
 
             for (let i = 0; i < output.length; i += MAX_CHARS) {
                 const chunk = output.substring(i, Math.min(output.length, i + MAX_CHARS));

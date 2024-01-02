@@ -3,6 +3,7 @@ const { getDatabase } = require("../../../modules/handlers/database");
 const { getRole } = require("../../../modules/utils");
 const logger = require("../../../modules/logger");
 const config = require("../../../../config");
+const { Op } = require("sequelize");
 
 /**
  * @param {Client} client 
@@ -32,7 +33,12 @@ module.exports = async (client, member) => {
     if (config.userJoinRoles.giveOldRoles) {
         const data = await db.findOne({
             where: {
-                user: member.id
+                [Op.and]: [
+                    {
+                        user: member.id,
+                        guild: member.guild.id,
+                    }
+                ]
             }
         });
 

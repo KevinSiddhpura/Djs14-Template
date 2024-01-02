@@ -65,6 +65,7 @@ module.exports = {
         }
 
         await db.create({
+            guild: interaction.guild.id,
             user: member.id,
             moderator: interaction.user.id,
             action: "warn",

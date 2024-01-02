@@ -4,6 +4,7 @@ const path = require('path');
 const config = require('../../config');
 const axios = require('axios');
 const logger = require('./logger');
+const { Op } = require('sequelize');
 
 module.exports = {
     wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
@@ -127,10 +128,19 @@ module.exports = {
     },
 
     updateXP: async (db, user, type, xpChange, guild, manualUpdate = false) => {
-        let data = await db.findOne({ where: { user: user.id } });
+        let data = await db.findOne({
+            where: {
+                [Op.and]: [
+                    {
+                        user: user.id,
+                        guild: guild.id
+                    },
+                ]
+            }
+        });
 
         if (!data) {
-            data = await db.create({ user: user.id, xp: 0, level: 0, messages: 0 });
+            data = await db.create({ guild: guild.id, user: user.id, xp: 0, level: 0, messages: 0 });
         }
 
         let newXp = data.xp;

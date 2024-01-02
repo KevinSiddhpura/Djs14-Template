@@ -1,6 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, Colors } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const config = require("../../../config");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "history",
@@ -33,7 +34,12 @@ module.exports = {
         const db = getDatabase("infractions");
         const data = await db.findAll({
             where: {
-                user: user.id
+                [Op.and]: [
+                    {
+                        user: user.id,
+                        guild: interaction.guild.id
+                    }
+                ],
             },
             order: [['given', 'DESC']]
         });

@@ -19,20 +19,10 @@ module.exports = async (/**@type {Client} */ client) => {
             };
         });
 
-        if (config.serverID === "") {
-            logger.error("Server ID not set in config.json");
-            return process.exit(1);
-        }
-
-        const guild = client.guilds.cache.get(config.serverID);
-        if (!guild) {
-            logger.error("Could not find guild with ID: " + config.serverID + " (mentioned in config.json)");
-            process.exit(1);
-            return;
-        }
+        logger.system(`MultiGuild is registration ${config.MultiGuild ? "enabled" : "disabled"}`);;
 
         const data = await rest.put(
-            Routes.applicationGuildCommands(client.user.id, guild.id),
+            config.MultiGuild ? Routes.applicationCommands(client.user.id) : Routes.applicationGuildCommands(client.user.id, config.serverID),
             { body: commands }
         );
 

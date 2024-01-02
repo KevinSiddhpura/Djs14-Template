@@ -47,7 +47,12 @@ module.exports = {
 
         const data = await db.findAll({
             where: {
-                user: user.id,
+                [Op.and]: [
+                    {
+                        user: user.id,
+                        guild: interaction.guild.id
+                    }
+                ],
                 action: {
                     [Op.or]: ["mute", "temp-mute"],
                 },

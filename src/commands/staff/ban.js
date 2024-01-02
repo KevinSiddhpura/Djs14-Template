@@ -85,7 +85,12 @@ module.exports = {
 
         const user_data = await db.findAll({
             where: {
-                user: user.id,
+                [Op.and]: [
+                    {
+                        user: user.id,
+                        guild: interaction.guild.id
+                    }
+                ],
                 action: {
                     [Op.or]: ["ban", "temp-ban"],
                 },
@@ -120,6 +125,7 @@ module.exports = {
 
         if (expires !== "permanent") {
             await db.create({
+                guild: interaction.guild.id,
                 user: user.id,
                 moderator: interaction.user.id,
                 action: "temp-ban",
@@ -135,6 +141,7 @@ module.exports = {
             });
         } else {
             await db.create({
+                guild: interaction.guild.id,
                 user: user.id,
                 moderator: interaction.user.id,
                 action: "ban",

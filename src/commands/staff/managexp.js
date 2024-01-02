@@ -3,6 +3,7 @@ const { getDatabase } = require("../../modules/handlers/database");
 const config = require("../../../config");
 const { updateXP } = require("../../modules/utils");
 const logger = require("../../modules/logger");
+const { Op } = require("sequelize");
 
 module.exports = {
     name: "manage-xp",
@@ -102,7 +103,16 @@ module.exports = {
 
         try {
             const db = getDatabase("leveling");
-            const user_data = await db.findOne({ where: { user: user.id } });
+            const user_data = await db.findOne({
+                where: {
+                    [Op.and]: [
+                        {
+                            user: user.id,
+                            guild: interaction.guild.id
+                        }
+                    ],
+                }
+            });
             if (!user_data) return interaction.editReply("User not found in database.");
             const operation = interaction.options.getSubcommand() === "increase" ? "add" : "remove";
             if (operation == "remove") {

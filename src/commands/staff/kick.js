@@ -73,6 +73,7 @@ module.exports = {
 
         await member.kick();
         await db.create({
+            guild: interaction.guild.id,
             user: user.id,
             moderator: interaction.user.id,
             action: "kick",

@@ -2,6 +2,7 @@ const { Client, GuildMember } = require("discord.js");
 const { getDatabase } = require("../../../modules/handlers/database");
 const { getRole } = require("../../../modules/utils");
 const config = require("../../../../config");
+const { Op } = require("sequelize");
 
 /**
  * @param {Client} client 
@@ -16,9 +17,15 @@ module.exports = async (client, member) => {
 
     const [data, created] = await db.findOrCreate({
         where: {
-            user: member.id
+            [Op.and]: [
+                {
+                    user: member.id,
+                    guild: member.guild.id,
+                }
+            ]
         },
         defaults: {
+            guild: member.guild.id,
             user: member.id,
             roles: JSON.stringify(userRoles)
         }

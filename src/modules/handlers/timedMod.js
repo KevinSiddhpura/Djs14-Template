@@ -4,6 +4,7 @@ const { getDatabase } = require("./database.js");
 const { EmbedBuilder, Colors } = require("discord.js");
 const logger = require("../logger.js");
 const config = require("../../../config.js");
+const { Op } = require("sequelize");
 
 module.exports = async () => {
     const data = getDatabase("infractions");
@@ -14,8 +15,12 @@ module.exports = async () => {
 
     const temp_mutes = await data.findAll({
         where: {
-            active: true,
-            action: "temp-mute",
+            [Op.and]: [
+                {
+                    active: true,
+                    action: "temp-mute",
+                }
+            ]
         }
     });
 

@@ -36,7 +36,12 @@ module.exports = {
 
         const data = await db.findAll({
             where: {
-                user: userId,
+                [Op.and]: [
+                    {
+                        user: userId,
+                        guild: interaction.guild.id
+                    }
+                ],
                 action: {
                     [Op.or]: ["ban", "temp-ban"],
                 },

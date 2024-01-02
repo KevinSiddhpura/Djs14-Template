@@ -3,6 +3,8 @@ module.exports = {
     botID: "-",
     // Put in developer IDs here
     devs: [],
+    // MultiGuild this registers commands in all the servers
+    MultiGuild: false,
     // Put in server ID here
     serverID: "-",
     // Get more info on what's starting

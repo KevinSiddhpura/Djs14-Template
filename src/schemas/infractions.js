@@ -8,6 +8,10 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true
         },
+        guild: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         user: {
             type: DataTypes.STRING,
             allowNull: false
