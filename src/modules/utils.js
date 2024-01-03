@@ -5,6 +5,7 @@ const config = require('../../config');
 const axios = require('axios');
 const logger = require('./logger');
 const { Op } = require('sequelize');
+const { TextChannel, Guild, Role, GuildMember } = require('discord.js');
 
 module.exports = {
     wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
@@ -46,6 +47,13 @@ module.exports = {
         return commands;
     },
 
+    /**
+     * 
+     * @param {String} channel 
+     * @param {Guild} guild 
+     * @returns {TextChannel}
+     */
+
     getChannel: (channel, guild) => {
         const channels = guild.channels.cache;
         if (Array.isArray(channel)) {
@@ -62,6 +70,13 @@ module.exports = {
             return _channel || false;
         }
     },
+
+    /**
+     * 
+     * @param {String} role 
+     * @param {Guild} guild 
+     * @returns {Role}
+     */
 
     getRole: (role, guild) => {
         const roles = guild.roles.cache;
@@ -80,6 +95,13 @@ module.exports = {
         }
     },
 
+    /**
+     * 
+     * @param {String} memberId 
+     * @param {Guild} guild 
+     * @returns {GuildMember}
+     */
+
     findMember: async (memberId, guild) => {
         let _member = await guild.members.fetch(memberId);
         if (_member) {
@@ -89,14 +111,33 @@ module.exports = {
         }
     },
 
+    /**
+     * 
+     * @param {Number} min 
+     * @param {Number} max 
+     * @returns {Number}
+     */
+
     getRandomIntBetween: (min, max) => {
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
+
+    /**
+     * 
+     * @param {String} string 
+     * @returns {String}
+     */
 
     capitalizeFirstLetter: (string) => {
         if (!string) return string;
         return string.charAt(0).toUpperCase() + string.slice(1);
     },
+
+    /**
+     * 
+     * @param {String} string 
+     * @returns {String}
+     */
 
     capitalizeFirstLetterOfEachWord: (string) => {
         if (!string) return string;
@@ -104,6 +145,14 @@ module.exports = {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ');
     },
+
+    /**
+     * 
+     * @param {String} text 
+     * @param {Boolean} raw 
+     * @param {String} paste_site 
+     * @returns {Object}
+     */
 
     paste: (text, raw = false, paste_site = config.pastebinURL || "https://paste.kwin.in") => {
         return new Promise((resolve, reject) => {
