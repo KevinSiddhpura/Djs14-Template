@@ -19,6 +19,11 @@ module.exports = async (/**@type {Client} */ client) => {
             };
         });
 
+        if(client.guilds.cache.size = 0) {
+            logger.error("Bot not found in any server")
+            process.exit(1);
+        }
+
         logger.system(`MultiGuild is registration ${config.MultiGuild ? "enabled" : "disabled"}`);;
 
         const data = await rest.put(

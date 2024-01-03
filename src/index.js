@@ -26,7 +26,7 @@ const client = new Client({
 });
 
 djsHandler(client);
-createDatabaseConnection();
+if(config.createDbConnection) createDatabaseConnection();
 
 /**@type {Manager} */
 let manager;
