@@ -29,6 +29,21 @@ module.exports = {
             clientSecret: "-",
         }
     },
+    // Suggestion System
+    suggestionSystem: {
+        enabled: false,
+        // Configure drop channels
+        channels: {
+            suggestion: "suggestions",
+            accepted: "accepted",
+            rejected: "rejected",
+            pending: "pending"
+        },
+        // Set false for no cooldown
+        cooldown: "6h",
+        // Enable or disable showing voter details
+        showVoters: true,
+    },
     // Connect to MSQL
     createDbConnection: false,
     // Manage your ptero server
