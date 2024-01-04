@@ -5,7 +5,7 @@ const config = require('../../config');
 const axios = require('axios');
 const logger = require('./logger');
 const { Op } = require('sequelize');
-const { TextChannel, Guild, Role, GuildMember } = require('discord.js');
+const { TextChannel, Guild, Role, GuildMember, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
 
 module.exports = {
     wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
@@ -243,5 +243,90 @@ module.exports = {
         }
 
         return data;
+    },
+
+    updateSuggestionMessageVoteAction: async (data, /**@type {ButtonInteraction} */ interaction) => {
+        const upVotes = JSON.parse(data.votedUsers).filter((t) => t.type == "upvote");
+        const downVotes = JSON.parse(data.votedUsers).filter((t) => t.type == "downvote");
+    
+        const rows = [
+            new ActionRowBuilder()
+                .setComponents([
+                    new ButtonBuilder()
+                        .setCustomId("suggestion-upvote")
+                        .setEmoji("👍")
+                        .setLabel("Likes • " + upVotes.length)
+                        .setStyle(ButtonStyle.Success),
+                    new ButtonBuilder()
+                        .setCustomId("suggestion-viewvoters")
+                        .setEmoji("📃")
+                        .setLabel("View Voters")
+                        .setDisabled(config.suggestionSystem.showVoters ? false : true)
+                        .setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder()
+                        .setCustomId("suggestion-downvote")
+                        .setEmoji("👎")
+                        .setLabel("Dislikes • " + downVotes.length)
+                        .setStyle(ButtonStyle.Danger),
+                ]),
+            new ActionRowBuilder()
+                .setComponents([
+                    new StringSelectMenuBuilder()
+                        .setCustomId("suggestion-manage")
+                        .setPlaceholder("Manage this suggestion")
+                        .setOptions([{
+                            label: "Accept Suggestion",
+                            emoji: "✅",
+                            value: "accept",
+                        }, {
+                            label: "Reject Suggestion",
+                            emoji: "❌",
+                            value: "reject",
+                        }, {
+                            label: "Put On Hold",
+                            emoji: "⏲",
+                            value: "hold",
+                        }, {
+                            label: "Reset Votes",
+                            emoji: "🔄",
+                            value: "reset",
+                        }, {
+                            label: "Delete Suggestion",
+                            emoji: "🗑️",
+                            value: "delete",
+                        }])
+                ])
+        ];
+    
+        let status;
+        if (data.status == "pending") status = "Pending Review";
+        if (data.status == "accepted") status = "Accepted";
+        if (data.status == "rejected") status = "Rejected";
+        if (data.status == "hold") status = "On Hold";
+    
+        const embed = interaction.message.embeds[0];
+        const newEmbed = new EmbedBuilder()
+            .setAuthor({
+                name: embed.author.name,
+                iconURL: embed.author.iconURL
+            })
+            .setDescription(embed.description)
+            .setColor(embed.color)
+            .setThumbnail(embed.thumbnail.url)
+    
+        newEmbed.setFields({
+            name: "Extra Info",
+            value: [
+                `- **Submitted by** • <@${data.user}> | \`${data.user}\``,
+                `- **Status** • ${status}`,
+                `- **Reactions** • \` ${upVotes.length + downVotes.length} \``,
+                `- **Submitted at** • <t:${(data.submitTime / 1000).toFixed(0)}:f>`,
+            ].join("\n")
+        })
+    
+        return interaction.message.edit({
+            embeds: [newEmbed],
+            components: [...rows]
+        });
     }
 }

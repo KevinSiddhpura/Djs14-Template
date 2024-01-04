@@ -134,6 +134,7 @@ module.exports = {
                 guild: interaction.guild.id,
                 user: interaction.user.id,
                 channel: submitChannel.id,
+                message: x.id,
                 suggestion: suggestion,
                 votedUsers: JSON.stringify([]),
                 upVotes: 0,

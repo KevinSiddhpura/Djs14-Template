@@ -20,20 +20,16 @@ module.exports = {
             type: DataTypes.STRING,
             allowNull: false
         },
+        message: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         suggestion: {
             type: DataTypes.TEXT,
             allowNull: false
         },
         votedUsers: {
             type: DataTypes.TEXT,
-            allowNull: false
-        },
-        upVotes: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        downVotes: {
-            type: DataTypes.INTEGER,
             allowNull: false
         },
         status: {
