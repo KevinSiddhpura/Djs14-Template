@@ -104,17 +104,9 @@ module.exports = {
 
     hasRole: (roles, member) => {
         if (Array.isArray(roles)) {
-            if (member.roles.cache.some(r => roles.includes(r.name) || roles.includes(r.id))) {
-                return true;
-            } else {
-                return false;
-            }
+            return !!member.roles.cache.some(r => roles.includes(r.name) || roles.includes(r.id))
         } else {
-            if (member.roles.cache.has(r => r.id == roles || r.name == roles)) {
-                return true;
-            } else {
-                return false;
-            }
+            return !!member.roles.cache.has(r => r.id == roles || r.name == roles)
         }
     },
 
