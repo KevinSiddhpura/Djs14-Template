@@ -97,6 +97,29 @@ module.exports = {
 
     /**
      * 
+     * @param {Array} roles 
+     * @param {GuildMember} member
+     * @returns {Boolean} 
+     */
+
+    hasRole: (roles, member) => {
+        if (Array.isArray(roles)) {
+            if (member.roles.cache.some(r => roles.includes(r.name) || roles.includes(r.id))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (member.roles.cache.has(r => r.id == roles || r.name == roles)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+
+    /**
+     * 
      * @param {String} memberId 
      * @param {Guild} guild 
      * @returns {GuildMember}
@@ -248,7 +271,7 @@ module.exports = {
     updateSuggestionMessageVoteAction: async (data, /**@type {ButtonInteraction} */ interaction) => {
         const upVotes = JSON.parse(data.votedUsers).filter((t) => t.type == "upvote");
         const downVotes = JSON.parse(data.votedUsers).filter((t) => t.type == "downvote");
-    
+
         const rows = [
             new ActionRowBuilder()
                 .setComponents([
@@ -297,13 +320,13 @@ module.exports = {
                         }])
                 ])
         ];
-    
+
         let status;
         if (data.status == "pending") status = "Pending Review";
         if (data.status == "accepted") status = "Accepted";
         if (data.status == "rejected") status = "Rejected";
         if (data.status == "hold") status = "On Hold";
-    
+
         const embed = interaction.message.embeds[0];
         const newEmbed = new EmbedBuilder()
             .setAuthor({
@@ -313,7 +336,7 @@ module.exports = {
             .setDescription(embed.description)
             .setColor(embed.color)
             .setThumbnail(embed.thumbnail.url)
-    
+
         newEmbed.setFields({
             name: "Extra Info",
             value: [
@@ -323,7 +346,7 @@ module.exports = {
                 `- **Submitted at** • <t:${(data.submitTime / 1000).toFixed(0)}:f>`,
             ].join("\n")
         })
-    
+
         return interaction.message.edit({
             embeds: [newEmbed],
             components: [...rows]

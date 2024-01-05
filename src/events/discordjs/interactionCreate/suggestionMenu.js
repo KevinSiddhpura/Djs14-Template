@@ -2,7 +2,7 @@ const { Client, StringSelectMenuInteraction, EmbedBuilder, Colors, ActionRow, Ac
 const config = require("../../../../config");
 const { getDatabase } = require("../../../modules/handlers/database");
 const { Op } = require("sequelize");
-const { getChannel, updateSuggestionMessageVoteAction } = require("../../../modules/utils");
+const { getChannel, updateSuggestionMessageVoteAction, hasRole } = require("../../../modules/utils");
 
 /**
  * @param {Client} client 
@@ -45,6 +45,9 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
     if (!holdChannel) {
         return interaction.reply({ content: "On-Hold suggestions channel not found channel not found", ephemeral: true });
     };
+
+    const accessRoles = config.suggestionSystem.manageAccess;
+    const hasAccess = hasRole(accessRoles, interaction.member);
 
     const oldEmbed = interaction.message.embeds[0];
     const newEmbed = new EmbedBuilder()
@@ -128,6 +131,10 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
 
     switch (value) {
         case "accept": {
+            if(!hasAccess) {
+                return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
+            }
+
             newEmbed.setColor(Colors.Green);
             await interaction.showModal(modal).catch(() => { });
             const filter = i => i.customId === "reason-modal-suggestion-" + interaction.id;
@@ -165,6 +172,10 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "reject": {
+            if(!hasAccess) {
+                return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
+            }
+
             newEmbed.setColor(Colors.Red);
             await interaction.showModal(modal).catch(() => { });
             const filter = i => i.customId === "reason-modal-suggestion-" + interaction.id;
@@ -176,7 +187,7 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
                 name: "Extra Info",
                 value: [
                     `- **Submitted By** • <@${data.user}> | \`${data.user}\``,
-                    `- **Status** • Accepted`,
+                    `- **Status** • Rejected`,
                     `- **Reactions** • \`${totalReactions}\``,
                     `- **Submitted at** • <t:${(data.submitTime / 1000).toFixed(0)}:f>`,
                 ].join("\n"),
@@ -201,6 +212,10 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "hold": {
+            if(!hasAccess) {
+                return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
+            }
+
             newEmbed.setColor(Colors.Yellow);
             await interaction.showModal(modal).catch(() => { });
             const filter = i => i.customId === "reason-modal-suggestion-" + interaction.id;
@@ -212,7 +227,7 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
                 name: "Extra Info",
                 value: [
                     `- **Submitted By** • <@${data.user}> | \`${data.user}\``,
-                    `- **Status** • Accepted`,
+                    `- **Status** • On Hold`,
                     `- **Reactions** • \`${totalReactions}\``,
                     `- **Submitted at** • <t:${(data.submitTime / 1000).toFixed(0)}:f>`,
                 ].join("\n"),
@@ -237,6 +252,10 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "reset": {
+            if(!hasAccess) {
+                return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
+            }
+
             await data.update({
                 votedUsers: JSON.stringify([]),
                 upVotes: 0,
@@ -255,8 +274,8 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "delete": {
-            if (interaction.user.id !== data.user) {
-                return interaction.reply({ content: "You can only delete your own suggestions", ephemeral: true });
+            if(!hasAccess || interaction.user.id !== data.user) {
+                return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
             };
 
             await interaction.deferUpdate().catch(() => {});

@@ -43,6 +43,8 @@ module.exports = {
         cooldown: "6h",
         // Enable or disable showing voter details
         showVoters: true,
+        // Roles who can access buttons an menus
+        manageAccess: ["Admin"]
     },
     // Connect to MSQL
     createDbConnection: false,
