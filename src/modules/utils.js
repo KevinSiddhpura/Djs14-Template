@@ -56,19 +56,9 @@ module.exports = {
 
     getChannel: (channel, guild) => {
         const channels = guild.channels.cache;
-        if (Array.isArray(channel)) {
-            let _channels = [];
-            for (const _c of channel) {
-                let _channel = channels.find(c => c.id === _c);
-                if (!_channel) _channel = channels.find(c => c.name === _c);
-                if (_channel !== undefined) _channels.push(_channel);
-            }
-            return _channels;
-        } else {
-            let _channel = channels.find(c => c.id === channel);
-            if (!_channel) _channel = channels.find(c => c.name === channel);
-            return _channel || false;
-        }
+        return Array.isArray(channel) ?
+            channel.map(c => channels.find(ch => ch.id === c || ch.name === c)).filter(c => c !== undefined) :
+            channels.find(c => c.id === channel || c.name === channel) || false;
     },
 
     /**
@@ -80,20 +70,11 @@ module.exports = {
 
     getRole: (role, guild) => {
         const roles = guild.roles.cache;
-        if (Array.isArray(role)) {
-            let _roles = [];
-            for (const _r of role) {
-                let _role = roles.find(r => r.id === _r);
-                if (!_role) _role = roles.find(r => r.name === _r);
-                if (_role !== undefined) _roles.push(_role);
-            }
-            return _roles;
-        } else {
-            let _role = roles.find(r => r.id === role);
-            if (!_role) _role = roles.find(r => r.name === role);
-            return _role || false;
-        }
+        return Array.isArray(role) ?
+            role.map(r => roles.find(ro => ro.id === r || ro.name === r)).filter(ro => ro !== undefined) :
+            roles.find(r => r.id === role || r.name === role) || false;
     },
+
 
     /**
      * 
