@@ -1,8 +1,7 @@
 const { Client, GuildMember } = require("discord.js");
 const { getDatabase } = require("../../../modules/handlers/database");
-const { getRole } = require("../../../modules/utils");
-const config = require("../../../../config");
 const { Op } = require("sequelize");
+const config = require("../../../configs/config");
 
 /**
  * @param {Client} client 

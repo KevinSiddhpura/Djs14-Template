@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const logger = require("../../../modules/logger");
 const timedMod = require("../../../modules/handlers/timedMod");
 const ms = require("ms");
-const config = require("../../../../config");
+const config = require("../../../configs/config");
 
 /**
  * @param {Client} client 

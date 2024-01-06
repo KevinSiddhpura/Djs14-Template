@@ -1,8 +1,9 @@
 const { Client, CommandInteraction, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, EmbedBuilder, Colors } = require("discord.js");
-const config = require("../../../config");
 const { getDatabase } = require("../../modules/handlers/database");
 const logger = require("../../modules/logger");
 const { getChannel } = require("../../modules/utils");
+const config = require("../../configs/config");
+const suggestionSystem = require("../../configs/suggestionSystem");
 
 module.exports = {
     name: "suggest",
@@ -14,7 +15,7 @@ module.exports = {
     roleRequired: ["Members"],
     options: [],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        if (!config.suggestionSystem || !config.createDbConnection) {
+        if (!suggestionSystem || !config.createDbConnection) {
             return interaction.reply({
                 content: "Suggestion system is disabled or database connection is not created",
                 ephemeral: true,
@@ -58,7 +59,7 @@ module.exports = {
                             .setCustomId("suggestion-viewvoters")
                             .setEmoji("📃")
                             .setLabel("View Voters")
-                            .setDisabled(config.suggestionSystem.showVoters ? false : true)
+                            .setDisabled(suggestionSystem.showVoters ? false : true)
                             .setStyle(ButtonStyle.Secondary),
                         new ButtonBuilder()
                             .setCustomId("suggestion-downvote")
@@ -95,7 +96,7 @@ module.exports = {
                     ])
             ]
 
-            const submitChannel = getChannel(config.suggestionSystem.channels.suggestion, interaction.guild);
+            const submitChannel = getChannel(suggestionSystem.channels.suggestion, interaction.guild);
             if (!submitChannel) {
                 return resp.reply({
                     content: "Suggestion channel was not found",

@@ -1,7 +1,7 @@
 const { Client, Message } = require("discord.js");
-const config = require("../../../../config");
 const { getDatabase } = require("../../../modules/handlers/database");
 const { getRandomIntBetween, updateXP } = require("../../../modules/utils");
+const levelingSystem = require("../../../configs/levelingSystem");
 
 /**
  * @param {Client} client 
@@ -17,10 +17,10 @@ module.exports = async (client, message) => {
 
     let xpToAdd = getRandomIntBetween(min, max);
 
-    if (config.levelSystem.roleXpMultiplier.enabled) {
+    if (levelingSystem.roleXpMultiplier.enabled) {
         const memberRoles = message.member.roles.cache;
         const multiplier = memberRoles
-            .map(role => config.levelSystem.roleXpMultiplier.roles.find(r => r.role === role.id || r.role === role.name)?.multiplier)
+            .map(role => levelingSystem.roleXpMultiplier.roles.find(r => r.role === role.id || r.role === role.name)?.multiplier)
             .filter(Boolean)
             .reduce((acc, mul) => acc * Number(mul), 1);
 

@@ -1,5 +1,5 @@
 const { OpenAI } = require("openai");
-const config = require("../../../config");
+const config = require("../../configs/config");
 
 if (!config.enableOpenAiSupport) return;
 

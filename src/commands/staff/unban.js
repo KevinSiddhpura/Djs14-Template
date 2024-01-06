@@ -1,7 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
-const config = require("../../../config");
+const config = require("../../configs/config");
 
 module.exports = {
     name: "unban",

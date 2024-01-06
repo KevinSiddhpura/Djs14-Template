@@ -1,6 +1,6 @@
 const { Client, CommandInteraction } = require("discord.js");
 const { getCommands } = require("../../../modules/utils");
-const config = require("../../../../config");
+const config = require("../../../configs/config");
 
 /**
  * @param {Client} client 

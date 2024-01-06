@@ -4,17 +4,21 @@ const crashHandler = require("./modules/handlers/crash");
 crashHandler();
 
 require("dotenv").config();
-const { Client, GatewayIntentBits } = require("discord.js");
-const djsHandler = require("./modules/handlers/discordjs");
-const erelaHandler = require("./modules/handlers/erelajs");
+const config = require("./configs/config");
+const musicSystem = require("./configs/musicSystem");
+
 const fs = require("fs");
+const { Client, GatewayIntentBits } = require("discord.js");
 const { createDatabaseConnection } = require("./modules/handlers/database");
-const config = require("../config");
+
 const { Manager } = require("erela.js");
 const AppleMusic = require("erela.js-apple");
 const Facebook = require("erela.js-facebook");
 const Deezer = require("erela.js-deezer");
 const Spotify = require("erela.js-spotify");
+
+const djsHandler = require("./modules/handlers/discordjs");
+const erelaHandler = require("./modules/handlers/erelajs");
 
 if (!fs.existsSync("./data/errors.log")) {
     fs.writeFileSync("./data/errors.log", "");
@@ -30,7 +34,7 @@ if(config.createDbConnection) createDatabaseConnection();
 
 /**@type {Manager} */
 let manager;
-if (config.musicSupport.enabled) {
+if (musicSystem.enabled) {
 
     const playerPlugins = [
         new AppleMusic(),
@@ -38,10 +42,10 @@ if (config.musicSupport.enabled) {
         new Deezer()
     ];
     
-    if(config.musicSupport.spotify.enabled) {
+    if(musicSystem.spotify.enabled) {
         playerPlugins.push(new Spotify({
-            clientID: config.musicSupport.spotify.clientID,
-            clientSecret: config.musicSupport.spotify.clientSecret,
+            clientID: musicSystem.spotify.clientID,
+            clientSecret: musicSystem.spotify.clientSecret,
         }));
     }
 
@@ -49,7 +53,7 @@ if (config.musicSupport.enabled) {
         autoPlay: true,
         clientId: config.botID,
         clientName: "Djs14",
-        nodes: config.musicSupport.nodes,
+        nodes: musicSystem.nodes,
         plugins: [...playerPlugins],
         send: (id, payload) => {
             const guild = client.guilds.cache.get(id);

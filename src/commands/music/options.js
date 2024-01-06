@@ -1,6 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
-const config = require("../../../config");
 const { manager } = require("../..");
+const config = require("../../configs/config");
+const musicSystem = require("../../configs/musicSystem");
 
 module.exports = {
     name: "music",
@@ -98,7 +99,7 @@ module.exports = {
         description: "Unmute the music player",
     }],
     execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
-        if (!config.musicSupport.enabled) return interaction.reply({ content: "Music support is disabled.", ephemeral: true });
+        if (!musicSystem.enabled) return interaction.reply({ content: "Music support is disabled.", ephemeral: true });
 
         const subCommands = interaction.options.getSubcommand();
         let player = manager.get(interaction.guild.id);

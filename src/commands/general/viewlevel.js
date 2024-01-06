@@ -1,7 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
-const config = require("../../../config");
-const { getRole } = require("../../modules/utils");
+const config = require("../../configs/config");
+const levelingSystem = require("../../configs/levelingSystem");
 
 module.exports = {
     name: "level",
@@ -28,7 +28,7 @@ module.exports = {
             })
         };
 
-        if (!config.levelSystem.enabled) {
+        if (!levelingSystem.enabled) {
             return interaction.reply({
                 content: "Leveling system is disabled!",
                 ephemeral: true,
@@ -52,7 +52,7 @@ module.exports = {
 
         const { user, xp, level, messages } = data;
 
-        const nextLevelXp = config.levelSystem.levelXp[level + 1] || "Max Level Reached";
+        const nextLevelXp = levelingSystem.levelXp[level + 1] || "Max Level Reached";
         const xpToNextLevel = nextLevelXp === "Max Level Reached" ? nextLevelXp : nextLevelXp - xp;
 
         let lvlUpMsg = "";

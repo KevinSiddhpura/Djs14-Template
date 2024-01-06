@@ -1,6 +1,6 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
-const config = require("../../../config");
+const config = require("../../configs/config");
 
 module.exports = {
     name: "kick",

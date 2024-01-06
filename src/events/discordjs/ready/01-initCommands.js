@@ -1,7 +1,7 @@
 const { REST, Routes, Client } = require("discord.js");
 const { getCommands } = require("../../../modules/utils");
 const logger = require("../../../modules/logger");
-const config = require("../../../../config");
+const config = require("../../../configs/config");
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
@@ -24,7 +24,7 @@ module.exports = async (/**@type {Client} */ client) => {
             process.exit(1);
         }
 
-        logger.system(`MultiGuild is registration ${config.MultiGuild ? "enabled" : "disabled"}`);;
+        logger.system(`MultiGuild registration is ${config.MultiGuild ? "enabled" : "disabled"}`);;
 
         const data = await rest.put(
             config.MultiGuild ? Routes.applicationCommands(client.user.id) : Routes.applicationGuildCommands(client.user.id, config.serverID),

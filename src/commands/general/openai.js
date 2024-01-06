@@ -3,7 +3,7 @@ const { openai } = require("../../modules/handlers/openAi");
 const logger = require("../../modules/logger");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
-const config = require("../../../config");
+const config = require("../../configs/config");
 
 module.exports = {
     name: "openai",

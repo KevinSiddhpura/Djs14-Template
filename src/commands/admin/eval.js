@@ -2,8 +2,12 @@ const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, 
 const { openai } = require("../../modules/handlers/openAi");
 const logger = require("../../modules/logger");
 const { getDatabase } = require("../../modules/handlers/database");
-const config = require("../../../config");
 const utils = require("../../modules/utils");
+const config = require("../../configs/config");
+const levelingSystem = require("../../configs/levelingSystem");
+const musicSystem = require("../../configs/musicSystem");
+const suggestionSystem = require("../../configs/suggestionSystem");
+const ticketSystem = require("../../configs/ticketSystem");
 
 const cleanIt = (text) => {
     if (typeof (text) === "string") {

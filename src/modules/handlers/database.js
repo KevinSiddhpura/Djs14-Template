@@ -1,8 +1,8 @@
 const { Sequelize } = require("sequelize");
 const path = require("path");
 const logger = require("../logger");
-const config = require("../../../config");
 const { getFiles } = require("../utils");
+const config = require("../../configs/config");
 
 if(!config.createDbConnection) return;
 

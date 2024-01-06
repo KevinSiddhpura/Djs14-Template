@@ -1,11 +1,13 @@
 const fs = require('fs');
 const ms = require('ms');
 const path = require('path');
-const config = require('../../config');
 const axios = require('axios');
 const logger = require('./logger');
 const { Op } = require('sequelize');
 const { TextChannel, Guild, Role, GuildMember, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
+const config = require('../configs/config');
+const levelingSystem = require('../configs/levelingSystem');
+const suggestionSystem = require('../configs/suggestionSystem');
 
 module.exports = {
     wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
@@ -198,24 +200,24 @@ module.exports = {
 
         let newLevel = data.level;
 
-        while (config.levelSystem.levelXp[newLevel + 1] && newXp >= config.levelSystem.levelXp[newLevel + 1]) {
+        while (levelingSystem.levelXp[newLevel + 1] && newXp >= levelingSystem.levelXp[newLevel + 1]) {
             newLevel++;
         }
 
-        while (newXp < config.levelSystem.levelXp[newLevel] && newLevel > 0) {
+        while (newXp < levelingSystem.levelXp[newLevel] && newLevel > 0) {
             newLevel--;
         }
 
         await data.update({ xp: newXp, level: newLevel, messages: manualUpdate ? data.messages : data.messages + 1 });
 
-        if (config.levelSystem.roleRewards.enabled && guild) {
+        if (levelingSystem.roleRewards.enabled && guild) {
             const member = guild.members.cache.get(user.id);
             if (!member) return false;
 
             const rolesToBeAdded = [];
             const rolesToBeRemoved = [];
 
-            config.levelSystem.roleRewards.reward.forEach(reward => {
+            levelingSystem.roleRewards.reward.forEach(reward => {
                 const role = module.exports.getRole(reward.role, guild);
                 if (!role) {
                     logger.error(`Role ${reward.role} not found!`);
@@ -257,7 +259,7 @@ module.exports = {
                         .setCustomId("suggestion-viewvoters")
                         .setEmoji("📃")
                         .setLabel("View Voters")
-                        .setDisabled(config.suggestionSystem.showVoters ? false : true)
+                        .setDisabled(suggestionSystem.showVoters ? false : true)
                         .setStyle(ButtonStyle.Secondary),
                     new ButtonBuilder()
                         .setCustomId("suggestion-downvote")

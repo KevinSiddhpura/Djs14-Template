@@ -1,8 +1,8 @@
 const { Client, StringSelectMenuInteraction, EmbedBuilder, Colors, ActionRow, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
-const config = require("../../../../config");
 const { getDatabase } = require("../../../modules/handlers/database");
 const { Op } = require("sequelize");
 const { getChannel, updateSuggestionMessageVoteAction, hasRole } = require("../../../modules/utils");
+const suggestionSystem = require("../../../configs/suggestionSystem");
 
 /**
  * @param {Client} client 
@@ -31,22 +31,22 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         return interaction.reply({ content: "This suggestion was not found in database", ephemeral: true });
     };
 
-    const acceptChannel = getChannel(config.suggestionSystem.channels.accepted, interaction.guild);
+    const acceptChannel = getChannel(suggestionSystem.channels.accepted, interaction.guild);
     if (!acceptChannel) {
         return interaction.reply({ content: "Accepted suggestions channel not found channel not found", ephemeral: true });
     };
 
-    const rejectChannel = getChannel(config.suggestionSystem.channels.rejected, interaction.guild);
+    const rejectChannel = getChannel(suggestionSystem.channels.rejected, interaction.guild);
     if (!rejectChannel) {
         return interaction.reply({ content: "Rejected suggestions channel not found channel not found", ephemeral: true });
     };
 
-    const holdChannel = getChannel(config.suggestionSystem.channels.pending, interaction.guild);
+    const holdChannel = getChannel(suggestionSystem.channels.pending, interaction.guild);
     if (!holdChannel) {
         return interaction.reply({ content: "On-Hold suggestions channel not found channel not found", ephemeral: true });
     };
 
-    const accessRoles = config.suggestionSystem.manageAccess;
+    const accessRoles = suggestionSystem.manageAccess;
     const hasAccess = hasRole(accessRoles, interaction.member);
 
     const oldEmbed = interaction.message.embeds[0];
@@ -131,7 +131,7 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
 
     switch (value) {
         case "accept": {
-            if(!hasAccess) {
+            if (!hasAccess) {
                 return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
             }
 
@@ -172,7 +172,7 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "reject": {
-            if(!hasAccess) {
+            if (!hasAccess) {
                 return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
             }
 
@@ -212,7 +212,7 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "hold": {
-            if(!hasAccess) {
+            if (!hasAccess) {
                 return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
             }
 
@@ -252,7 +252,7 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "reset": {
-            if(!hasAccess) {
+            if (!hasAccess) {
                 return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
             }
 
@@ -274,11 +274,11 @@ module.exports = async ( /**@type {Client} */ client, interaction) => {
         }
 
         case "delete": {
-            if(!hasAccess || interaction.user.id !== data.user) {
+            if (!hasAccess || interaction.user.id !== data.user) {
                 return interaction.reply({ content: "You don't have access to this action", ephemeral: true });
             };
 
-            await interaction.deferUpdate().catch(() => {});
+            await interaction.deferUpdate().catch(() => { });
 
             await data.destroy();
             await interaction.message.delete().catch(() => { });

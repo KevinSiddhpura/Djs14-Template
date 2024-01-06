@@ -1,7 +1,7 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, Colors } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
-const config = require("../../../config");
 const { Op } = require("sequelize");
+const config = require("../../configs/config");
 
 module.exports = {
     name: "history",

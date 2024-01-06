@@ -1,9 +1,9 @@
 const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
-const config = require("../../../config");
 const { updateXP } = require("../../modules/utils");
 const logger = require("../../modules/logger");
 const { Op } = require("sequelize");
+const config = require("../../configs/config");
 
 module.exports = {
     name: "manage-xp",

@@ -1,8 +1,8 @@
 const { Client, ButtonInteraction } = require("discord.js");
 const { getDatabase } = require("../../../modules/handlers/database");
 const { Op } = require("sequelize");
-const config = require("../../../../config");
 const { updateSuggestionMessageVoteAction } = require("../../../modules/utils");
+const suggestionSystem = require("../../../configs/suggestionSystem");
 
 /**
  * 
@@ -73,7 +73,7 @@ module.exports = async (client, interaction) => {
         };
 
         case "suggestion-viewvoters": {
-            if (!config.suggestionSystem.showVoters) {
+            if (!suggestionSystem.showVoters) {
                 return interaction.editReply({ content: "Viewing voters is disabled", ephemeral: true });
             } else {
                 return interaction.editReply({ content: `Coming soon...`, ephemeral: true });

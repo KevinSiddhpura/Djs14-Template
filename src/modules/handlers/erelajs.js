@@ -1,8 +1,8 @@
+const musicSystem = require("../../configs/musicSystem");
 const { getFiles } = require("../utils");
 const path = require("path");
-const config = require("../../../config");
 
-if (!config.musicSupport.enabled) return;
+if (!musicSystem.enabled) return;
 
 module.exports = (manager) => {
     const files = getFiles(path.join(__dirname, "..", "..", "events", "erelajs"), false);

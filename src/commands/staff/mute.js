@@ -3,7 +3,7 @@ const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
 const { Op } = require("sequelize");
-const config = require("../../../config");
+const config = require("../../configs/config");
 
 module.exports = {
     name: "mute",

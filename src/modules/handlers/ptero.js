@@ -1,4 +1,4 @@
-const config = require("../../../config");
+const config = require("../../configs/config");
 const logger = require("../logger");
 const axios = require("axios");
 
