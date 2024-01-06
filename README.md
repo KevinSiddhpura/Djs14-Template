@@ -1,10 +1,5 @@
 # Discord.js 14 - Bot
 
-## Overview
-Bot with better events, commands, databases, ptero manager, music manager and crash management.
-- Beginner friendly.
-- Easy to learn.
-
 ## Prerequisites
 - Node.js v16.9+
 - Discord.js v14
@@ -18,6 +13,7 @@ Bot with better events, commands, databases, ptero manager, music manager and cr
 - OpenAI support.
 - Erela.js support for music.
 - Leveling system & rewards.
+- Suggestion system.
 
 ## Installation & Setup
 1. Ensure Node.js is installed.
@@ -44,9 +40,7 @@ npm start
 
 ## Upcoming Features
 - Addition of TypeScript support.
-- Music commands
-- Music plugins
-- Custom filters
+- Ticket system
 
 ## Resources
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
