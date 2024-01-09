@@ -11,7 +11,7 @@ const suggestionSystem = require("../../../configs/suggestionSystem");
  */
 
 module.exports = async (client, interaction) => {
-    if (!interaction.isButton() || !interaction.customId.startsWith("suggestion-")) return;
+    if (!interaction.isButton() || !interaction.customId.includes("suggestion-")) return;
     const customID = interaction.customId;
 
     await interaction.deferReply({ ephemeral: true });
