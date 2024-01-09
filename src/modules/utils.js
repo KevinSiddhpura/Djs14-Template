@@ -85,11 +85,11 @@ module.exports = {
      * @returns {Boolean} 
      */
 
-    hasRole: (roles, member) => {
-        if (Array.isArray(roles)) {
-            return !!member.roles.cache.some(r => roles.includes(r.name) || roles.includes(r.id))
+    hasRole: (role, member) => {
+        if (member.roles.cache.some(r => r.name == role) || member.roles.cache.some(r => r.id == role)) {
+            return true;
         } else {
-            return !!member.roles.cache.has(r => r.id == roles || r.name == roles)
+            return false;
         }
     },
 

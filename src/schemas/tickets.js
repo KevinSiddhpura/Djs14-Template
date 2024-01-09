@@ -26,19 +26,19 @@ module.exports = {
         },
         claimedBy: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         claimedAt: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         isClaimed: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: true
         },
         isOnHold: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: true
         },
         active: {
             type: DataTypes.BOOLEAN,
@@ -46,19 +46,19 @@ module.exports = {
         },
         transcriptURL: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         closedBy: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         openReason: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         closeReason: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         openTime: {
             type: DataTypes.STRING,
@@ -66,7 +66,7 @@ module.exports = {
         },
         closeTime: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
     },
     defaults: {
