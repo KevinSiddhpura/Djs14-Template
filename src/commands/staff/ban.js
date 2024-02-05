@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, Colors, EmbedBuilder } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, Colors, EmbedBuilder, Message } = require("discord.js");
 const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
@@ -57,9 +57,16 @@ module.exports = {
             required: false,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {        
-        
-        if(!config.createDbConnection) {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
+
+        if (!config.createDbConnection) {
             return interaction.reply({
                 content: "Database connection is not enabled",
                 ephemeral: true,
@@ -121,7 +128,7 @@ module.exports = {
                         })
                 ]
             })
-        } catch (e) {}
+        } catch (e) { }
 
         if (expires !== "permanent") {
             await db.create({
@@ -156,5 +163,16 @@ module.exports = {
                 content: "**Banned** <@" + user.id + "> successfully",
             });
         }
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message
+     * @param {Array} args 
+     */
+    
+    runLegacy: async (/**@type {Client} */ client, /**@type {Message} */ args) => {
+
     }
 }

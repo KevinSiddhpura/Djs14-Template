@@ -1,4 +1,4 @@
-const { Client, CommandInteraction, EmbedBuilder } = require("discord.js");
+const { Client, CommandInteraction, EmbedBuilder, Message } = require("discord.js");
 
 module.exports = {
     name: "ping",
@@ -9,7 +9,15 @@ module.exports = {
     channelOnly: [],
     roleRequired: [],
     options: [],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
 
         await interaction.deferReply({ ephemeral: true });
         const repTime = await interaction.fetchReply();
@@ -28,5 +36,16 @@ module.exports = {
                     .setColor("Aqua")
             ]
         })
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+
     }
 }

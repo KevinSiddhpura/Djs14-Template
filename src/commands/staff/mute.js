@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, Message } = require("discord.js");
 const ms = require("ms");
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
@@ -58,6 +58,13 @@ module.exports = {
             required: false,
         }
     ],
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+    
     execute: async (client, interaction) => {
 
         if(!config.createDbConnection) {
@@ -154,5 +161,15 @@ module.exports = {
                 content: "**Muted** <@" + user.id + "> successfully",
             });
         }
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

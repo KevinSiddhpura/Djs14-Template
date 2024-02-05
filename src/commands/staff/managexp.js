@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const { updateXP } = require("../../modules/utils");
 const logger = require("../../modules/logger");
@@ -59,7 +59,7 @@ module.exports = {
      * @param {CommandInteraction} interaction 
      */
 
-    execute: async (client, interaction) => {
+    runSlash: async (client, interaction) => {
 
         if (!config.createDbConnection || !config.levelSystem.enabled) {
             return interaction.reply({
@@ -126,6 +126,16 @@ module.exports = {
             logger.error(e);
             return interaction.editReply("An error occurred while updating XP.");
         };
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }
 

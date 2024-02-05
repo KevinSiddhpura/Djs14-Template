@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, Message } = require("discord.js");
 const { manager } = require("../..");
 const config = require("../../configs/config");
 const musicSystem = require("../../configs/musicSystem");
@@ -98,7 +98,15 @@ module.exports = {
         name: "unmute",
         description: "Unmute the music player",
     }],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
         if (!musicSystem.enabled) return interaction.reply({ content: "Music support is disabled.", ephemeral: true });
 
         const subCommands = interaction.options.getSubcommand();
@@ -462,5 +470,15 @@ module.exports = {
                 })
             }
         }
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, CommandInteraction, Client, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder } = require("discord.js");
+const { ApplicationCommandOptionType, CommandInteraction, Client, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder, Message } = require("discord.js");
 
 module.exports = {
     name: "avatar",
@@ -32,7 +32,15 @@ module.exports = {
             ]
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
         await interaction.deferReply({ ephemeral: true });
 
         const user = interaction.options.getUser("mention") || interaction.user;
@@ -68,5 +76,16 @@ module.exports = {
                     ])
             ]
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+        
     }
 }

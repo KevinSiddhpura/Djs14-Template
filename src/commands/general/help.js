@@ -1,4 +1,4 @@
-const { Client, CommandInteraction, EmbedBuilder, ActionRowBuilder, Colors, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require("discord.js");
+const { Client, CommandInteraction, EmbedBuilder, ActionRowBuilder, Colors, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, Message } = require("discord.js");
 const { getCommands, capitalizeFirstLetter } = require("../../modules/utils");
 
 module.exports = {
@@ -10,7 +10,14 @@ module.exports = {
     channelOnly: ["commands"],
     roleRequired: [],
     options: [],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
         await interaction.deferReply({ ephemeral: false });
 
         const commands = getCommands();
@@ -52,7 +59,7 @@ module.exports = {
         const selectMenuCollector = msg.createMessageComponentCollector({ filter: selectMenuFilter, time: 60000 });
 
         selectMenuCollector.on('collect', async (i) => {
-            await i.deferUpdate().catch(() => {})
+            await i.deferUpdate().catch(() => { })
             const selectedCategory = i.values[0];
             const categoryCommands = commands.filter(cmd => cmd.category === selectedCategory);
             let page = 0;
@@ -113,7 +120,7 @@ module.exports = {
                 } else {
                     return;
                 }
-            
+
                 const updatedPaginationRow = new ActionRowBuilder()
                     .addComponents(
                         new ButtonBuilder()
@@ -127,8 +134,8 @@ module.exports = {
                             .setStyle(ButtonStyle.Primary)
                             .setDisabled(page === totalPages - 1)
                     );
-            
-                await buttonInteraction.deferUpdate().catch(() => {});
+
+                await buttonInteraction.deferUpdate().catch(() => { });
                 await buttonInteraction.editReply({
                     embeds: [updateEmbed(page)],
                     components: [updatedPaginationRow, row]
@@ -143,5 +150,16 @@ module.exports = {
         selectMenuCollector.on('end', () => {
             interaction.editReply({ components: [] });
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} interaction
+     * @param {Array} args
+     */
+
+    runLegacy: async (client, message, args) => {
+    
     }
 };

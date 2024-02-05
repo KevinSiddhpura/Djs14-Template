@@ -1,6 +1,8 @@
 module.exports = {
     // Put bot id here
     botID: "1133838030990491788",
+    // Bot Prefix
+    prefix: "!",
     // Put in developer IDs here
     devs: ["528627987667615755"],
     // MultiGuild this registers commands in all the servers

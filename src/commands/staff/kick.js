@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const config = require("../../configs/config");
 
@@ -24,9 +24,16 @@ module.exports = {
             required: true,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 
-        if(!config.createDbConnection) {
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
+
+        if (!config.createDbConnection) {
             return interaction.reply({
                 content: "Database connection is not enabled",
                 ephemeral: true,
@@ -43,7 +50,7 @@ module.exports = {
             return interaction.editReply("User not found in server");
         }
 
-        if(!member.kickable) {
+        if (!member.kickable) {
             return interaction.editReply("I can't kick the mentioned member");
         }
 
@@ -86,5 +93,15 @@ module.exports = {
         return interaction.editReply({
             content: "**Kicked** <@" + user.id + "> successfully",
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} interaction 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

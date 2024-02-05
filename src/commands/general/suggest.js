@@ -1,4 +1,4 @@
-const { Client, CommandInteraction, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, EmbedBuilder, Colors } = require("discord.js");
+const { Client, CommandInteraction, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, EmbedBuilder, Colors, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const logger = require("../../modules/logger");
 const { getChannel } = require("../../modules/utils");
@@ -14,7 +14,15 @@ module.exports = {
     channelOnly: ["commands"],
     roleRequired: ["Members"],
     options: [],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
         if (!suggestionSystem || !config.createDbConnection) {
             return interaction.reply({
                 content: "Suggestion system is disabled or database connection is not created",
@@ -164,5 +172,16 @@ module.exports = {
                 });
             })
         }
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+
     }
 }

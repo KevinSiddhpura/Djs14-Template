@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
 const config = require("../../configs/config");
@@ -19,7 +19,14 @@ module.exports = {
             required: true,
         },
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
 
         if(!config.createDbConnection) {
             return interaction.reply({
@@ -67,5 +74,15 @@ module.exports = {
             await interaction.guild.bans.remove(userId);
             return interaction.editReply("User has been unbanned");
         };
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, Colors, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const { Op } = require("sequelize");
 const config = require("../../configs/config");
@@ -19,9 +19,17 @@ module.exports = {
             required: true,
         },
     ],
-    execute: async (client, interaction) => {
 
-        if(!config.createDbConnection) {
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
+
+        if (!config.createDbConnection) {
             return interaction.reply({
                 content: "Database connection is not enabled",
                 ephemeral: true,
@@ -168,5 +176,16 @@ module.exports = {
         collector.on('end', () => {
             msg.edit({ components: [] });
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+
     }
 };

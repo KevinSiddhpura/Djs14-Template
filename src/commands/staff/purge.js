@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, Message } = require("discord.js");
 
 module.exports = {
     name: "purge",
@@ -16,7 +16,14 @@ module.exports = {
             required: true,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
 
         await interaction.deferReply({ ephemeral: true });
 
@@ -41,5 +48,15 @@ module.exports = {
                 ephemeral: true
             });
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

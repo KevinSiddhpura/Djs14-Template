@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const config = require("../../configs/config");
 
@@ -24,9 +24,16 @@ module.exports = {
             required: true,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 
-        if(!config.createDbConnection) {
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
+
+        if (!config.createDbConnection) {
             return interaction.reply({
                 content: "Database connection is not enabled",
                 ephemeral: true,
@@ -78,5 +85,15 @@ module.exports = {
         await interaction.editReply({
             content: "**Warned** <@" + member.id + "> successfully",
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

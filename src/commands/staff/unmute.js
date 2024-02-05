@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const { getRole } = require("../../modules/utils");
 const { Op } = require("sequelize");
@@ -20,9 +20,16 @@ module.exports = {
             required: true,
         },
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
 
-        if(!config.createDbConnection) {
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     */
+
+    runSlash: async (client, interaction) => {
+
+        if (!config.createDbConnection) {
             return interaction.reply({
                 content: "Database connection is not enabled",
                 ephemeral: true,
@@ -79,5 +86,15 @@ module.exports = {
         }
 
         return interaction.editReply(`**Unmuted** <@${user.id}> successfully`);
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
     }
 }

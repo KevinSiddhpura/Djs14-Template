@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType, GuildMember } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType, GuildMember, Message } = require("discord.js");
 const ms = require("ms");
 const { findMember } = require("../../modules/utils");
 const logger = require("../../modules/logger");
@@ -31,7 +31,15 @@ module.exports = {
             ]
         },
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
         await interaction.deferReply({ ephemeral: true });
 
         const subCommand = interaction.options.getSubcommand();
@@ -227,5 +235,16 @@ module.exports = {
                 break;
             }
         }
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+
     }
 }

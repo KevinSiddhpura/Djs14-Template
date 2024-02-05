@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder, Colors, Message, Client, CommandInteraction } = require("discord.js");
 const { openai } = require("../../modules/handlers/openAi");
 const logger = require("../../modules/logger");
 const { getDatabase } = require("../../modules/handlers/database");
@@ -31,7 +31,15 @@ module.exports = {
             required: false,
         }
     ],
-    execute: async (client, interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
         if (!config.enableOpenAiSupport) {
             return interaction.reply({ content: "OpenAI module is disabled", ephemeral: true });
         }
@@ -96,6 +104,17 @@ module.exports = {
             logger.error(error);
             await interaction.editReply({ content: `Error occurred: ${error.message}` });
         }
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+
     }
 };
 

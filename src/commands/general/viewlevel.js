@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors } = require("discord.js");
+const { ApplicationCommandOptionType, Client, CommandInteraction, EmbedBuilder, Colors, Message } = require("discord.js");
 const { getDatabase } = require("../../modules/handlers/database");
 const config = require("../../configs/config");
 const levelingSystem = require("../../configs/levelingSystem");
@@ -19,7 +19,15 @@ module.exports = {
             required: false,
         }
     ],
-    execute: async (/**@type {Client} */ client, /**@type {CommandInteraction} */ interaction) => {
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
+
+    runSlash: async (client, interaction) => {
 
         if (!config.createDbConnection) {
             return interaction.reply({
@@ -56,7 +64,7 @@ module.exports = {
         const xpToNextLevel = nextLevelXp === "Max Level Reached" ? nextLevelXp : nextLevelXp - xp;
 
         let lvlUpMsg = "";
-        if(xpToNextLevel !== "Max Level Reached") {
+        if (xpToNextLevel !== "Max Level Reached") {
             lvlUpMsg = `Level up in **${xpToNextLevel}**`;
         } else {
             lvlUpMsg = `__**${xpToNextLevel}**__`;
@@ -91,5 +99,16 @@ module.exports = {
                     })
             ],
         });
+    },
+
+    /**
+     * 
+     * @param {Client} client 
+     * @param {Message} message 
+     * @param {Array} args 
+     */
+
+    runLegacy: async (client, message, args) => {
+
     }
 }
