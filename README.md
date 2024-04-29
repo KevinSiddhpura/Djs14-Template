@@ -9,7 +9,7 @@
 - Modular design for flexible customization.
 - Planned updates for additional commands and utilities.
 - Better database management.
-- 
+
 ## Installation & Setup
 1. Ensure Node.js is installed.
 2. Clone the repository:
