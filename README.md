@@ -9,12 +9,7 @@
 - Modular design for flexible customization.
 - Planned updates for additional commands and utilities.
 - Better database management.
-- Anti-crash system.
-- OpenAI support.
-- Erela.js support for music.
-- Leveling system & rewards.
-- Suggestion system.
-
+- 
 ## Installation & Setup
 1. Ensure Node.js is installed.
 2. Clone the repository:
@@ -36,19 +31,12 @@ npm start
 
 ## Configuration
 - Store the bot token in a `.env` file.
-- Configure bot settings in `config.js`, including `serverID`.
-
-## Upcoming Features
-- Addition of TypeScript support.
-- Ticket system
+- Configure bot settings in `src/constants.js`, including `serverID`.
 
 ## Resources
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
 - [Sequelize Guide & Documentation](https://sequelize.org/docs/v6/getting-started/)
-- [Pterodactyl v1 API Reference](https://dashflo.net/docs/api/pterodactyl/v1/)
-- [OpenAI Documentation](https://platform.openai.com/docs/introduction)
-- [Erela.js Documentation - (Not Maintained)](https://guides.menudocs.org/topics/erelajs/)
 
 ## Acknowledgments
 This project is a continuous effort. I will appreciate your feedbacks.
