@@ -1,54 +1,59 @@
 const { Sequelize } = require("sequelize");
 const path = require("path");
-const logger = require("../logger");
 const { getFiles } = require("../utils");
-const config = require("../../configs/config");
 
-if(!config.createDbConnection) return;
+class Database {
+    constructor({ name, username, host, password, port }) {
+        this.database = new Sequelize({
+            dialect: "mysql",
+            database: name,
+            username: username,
+            host: host,
+            password: password,
+            port: port,
+            logging: false,
+        });
 
-const database = new Sequelize({
-    dialect: "mysql",
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    logging: false,
-});
+        this.files = [];
+        this.folder = getFiles(path.join(__dirname, "..", "..", "schemas"));
+    }
 
-const files = [];
-const folder = getFiles(path.join(__dirname, "..", "..", "schemas"));
+    async createConnection() {
+        try {
+            await this.database.authenticate();
+            console.log("[Db] • Connection created");
+            this.syncModels();
+        } catch (error) {
+            console.log("[Db] • Unable to connect to the database:", error);
+            process.exit(1);
+        }
+    }
 
-for (const f of folder) {
-    const data = require(f);
-    files.push(data);
-};
+    syncModels() {
+        for (const file of this.folder) {
+            const data = require(file);
+            this.files.push(data);
+        }
 
-const createDatabaseConnection = async () => {
-    await database.authenticate().then(() => {
-        logger.mysql("Database connection connected");
-        if (files.length) {
-            for (i = 0; i < files.length; i++) {
-                const model = database.define(files[i].name, files[i].options, files[i].defaults);
+        if (this.files.length) {
+            for (const file of this.files) {
+                const model = this.database.define(file.name, file.options, file.defaults);
                 model.sync({ alter: true });
-                if (config.extraStartUpLogs) logger.mysql(`Schema file ${files[i].name} synced`);
             }
         } else {
-            if (config.extraStartUpLogs) logger.mysql("No schema files found");
+            console.log("[Db] • No models found");
         }
-    }).catch(e => {
-        logger.error(e);
-    });
-};
+    }
 
-const getDatabase = (tableName) => {
-    const exists = database.isDefined(tableName);
-    if (exists) {
-        const model = database.model(tableName);
-        return model;
-    } else {
-        return false;
+    getTable(tableName) {
+        const exists = this.database.isDefined(tableName);
+        if (exists) {
+            const model = this.database.model(tableName);
+            return model;
+        } else {
+            return false;
+        }
     }
 }
 
-module.exports = { createDatabaseConnection, getDatabase }
+module.exports = Database;

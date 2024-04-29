@@ -1,68 +1,35 @@
-const logger = require("./modules/logger");
-logger.system("Attempting to start bot, might take some time");
-const crashHandler = require("./modules/handlers/crash");
-crashHandler();
+const { Client, GatewayIntentBits, Collection } = require("discord.js");
+const djsevents = require("./modules/handlers/djsevents");
+const Database = require("./modules/handlers/database");
+const env = require("dotenv");
+env.config();
 
-require("dotenv").config();
-const config = require("./configs/config");
-const musicSystem = require("./configs/musicSystem");
-
-const fs = require("fs");
-const { Client, GatewayIntentBits } = require("discord.js");
-const { createDatabaseConnection } = require("./modules/handlers/database");
-
-const { Manager } = require("erela.js");
-const AppleMusic = require("erela.js-apple");
-const Facebook = require("erela.js-facebook");
-const Deezer = require("erela.js-deezer");
-const Spotify = require("erela.js-spotify");
-
-const djsHandler = require("./modules/handlers/discordjs");
-const erelaHandler = require("./modules/handlers/erelajs");
-
-if (!fs.existsSync("./data/errors.log")) {
-    fs.writeFileSync("./data/errors.log", "");
-};
-
-const client = new Client({
-    intents: Object.keys(GatewayIntentBits),
-    failIfNotExists: false
+const db = new Database({
+    name: process.env.DB_NAME,
+    username: process.env.DB_USERNAME,
+    host: process.env.DB_HOST,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
 });
 
-djsHandler(client);
-if(config.createDbConnection) createDatabaseConnection();
+const commands = new Collection();
+const client = new Client({
+    intents: Object.keys(GatewayIntentBits)
+});
 
-/**@type {Manager} */
-let manager;
-if (musicSystem.enabled) {
+(async () => {
+    await db.createConnection();
+    await djsevents(client);
+})();
 
-    const playerPlugins = [
-        new AppleMusic(),
-        new Facebook(),
-        new Deezer()
-    ];
-    
-    if(musicSystem.spotify.enabled) {
-        playerPlugins.push(new Spotify({
-            clientID: musicSystem.spotify.clientID,
-            clientSecret: musicSystem.spotify.clientSecret,
-        }));
-    }
+client.login(process.env.TOKEN);
 
-    manager = new Manager({
-        autoPlay: true,
-        clientId: config.botID,
-        clientName: "Djs14",
-        nodes: musicSystem.nodes,
-        plugins: [...playerPlugins],
-        send: (id, payload) => {
-            const guild = client.guilds.cache.get(id);
-            if (guild) guild.shard.send(payload);
-        }
-    }).init(config.botID);
-    erelaHandler(manager);
-}
+process.on("uncaughtException", (error, origin) => {
+    console.log("uncaughtException", error, origin);
+});
 
-client.login(process.env.TOKEN).catch(e => logger.error(e));
+process.on("unhandledRejection", (reason) => {
+    console.log("unhandledRejection", reason);
+});
 
-module.exports = { client, manager };
+module.exports = { client, db, commands };
