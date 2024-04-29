@@ -9,7 +9,7 @@ module.exports = {
     aliases: [],
     allowedChannels: [],
     allowedRoles: [],
-    slashOptions: [],
+    options: [],
 
     /**
      * 
