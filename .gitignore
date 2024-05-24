@@ -1,3 +1,4 @@
 \node_modules
 errors.log
 \backup
+.env
