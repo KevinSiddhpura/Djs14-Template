@@ -1,35 +1,31 @@
-const { Client, GatewayIntentBits, Collection } = require("discord.js");
-const djsevents = require("./modules/handlers/djsevents");
-const Database = require("./modules/handlers/database");
-const env = require("dotenv");
-env.config();
+const { Client, GatewayIntentBits } = require("discord.js");
+const { config } = require("dotenv");
+const { requireCommands } = require("./handlers/utils");
+const runEvents = require("./handlers/helpers/runEvents");
+const logger = require("./handlers/helpers/logger");
+const { mongoConnection } = require("./handlers/db");
 
-const db = new Database({
-    name: process.env.DB_NAME,
-    username: process.env.DB_USERNAME,
-    host: process.env.DB_HOST,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
-});
+config();
+requireCommands();
 
-const commands = new Collection();
 const client = new Client({
     intents: Object.keys(GatewayIntentBits)
 });
 
-(async () => {
-    await db.createConnection();
-    await djsevents(client);
-})();
+const promises = [
+    mongoConnection(),
+    runEvents(client)
+]
 
+Promise.allSettled(promises).catch(logger.error);
 client.login(process.env.TOKEN);
 
-process.on("uncaughtException", (error, origin) => {
-    console.log("uncaughtException", error, origin);
+process.on("unhandledRejection", (err) => {
+    logger.error(err);
 });
 
-process.on("unhandledRejection", (reason) => {
-    console.log("unhandledRejection", reason);
+process.on("uncaughtException", (err) => {
+    logger.error(err);
 });
 
-module.exports = { client, db, commands };
+module.exports = client
