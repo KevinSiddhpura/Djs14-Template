@@ -31,12 +31,12 @@ npm start
 
 ## Configuration
 - Store the bot token in a `.env` file.
-- Configure bot settings in `src/constants.js`, including `serverID`.
+- Configure bot settings in `src/config.js`, including `serverID`.
 
 ## Resources
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
-- [Sequelize Guide & Documentation](https://sequelize.org/docs/v6/getting-started/)
+- [Mongoosejs Documentation](https://mongoosejs.com/docs/)
 
 ## Acknowledgments
 This project is a continuous effort. I will appreciate your feedbacks.
