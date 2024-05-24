@@ -1,15 +1,12 @@
-const { DataTypes } = require("sequelize");
+// Must create this under models folder
+// Name of the file is the name of the model
 
-module.exports = {
-    name: "template",
-    options: {
-        some: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        data: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
+const { Schema } = require("mongoose");
+
+module.exports = new Schema({
+    guildID: {
+        type: String
     },
-};
+}, {
+    timestamps: true,
+});
