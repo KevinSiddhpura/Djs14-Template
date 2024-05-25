@@ -11,18 +11,20 @@ const optionsLayout = {
     /** @type {string} */
     description: null,
     /** @type {boolean} */
-    required: false,
+    required: null,
     /** @type {Array} */
     choices: [],
     /** @type {ChannelType[]} */
     channelTypes: [],
     /** @type {boolean} */
-    autocomplete: false
+    autocomplete: null
 };
 
 const commandLayout = {
     /** @type {boolean} */
-    enabled: true,
+    enabled: null,
+    /** @type {string} */
+    category: null,
     /** @type {string} */
     name: null,
     /** @type {string} */
@@ -32,11 +34,11 @@ const commandLayout = {
     /** @type {ApplicationCommandType} */
     type: null,
     /** @type {string[]} */
-    aliases: [String],
+    aliases: [],
     /** @type {boolean} */
-    devOnly: false,
+    devOnly: null,
     /** @type {boolean} */
-    adminOnly: false,
+    adminOnly: null,
     /** @type {string[]} */
     allowedRoles: [],
     /** @type {string[]} */
@@ -82,6 +84,9 @@ class Command {
         this.name = commandOptions.name;
         if (!this.name) return logger.error(`Missing command name`);
         if (commandCollection.has(this.name)) return logger.error(`Duplicate command name: ${this.name}`);
+
+        this.category = commandOptions.category || null;
+        if (!this.category) return logger.error(`Missing command category for ${this.name}`);
 
         this.enabled = commandOptions.enabled || true;
         this.description = commandOptions.description || null;
