@@ -43,6 +43,11 @@ async function performChecks(command, interaction) {
                 return true;
             }
         }
+
+        return interaction.reply({
+            content: "This command can only be used in the following channels: " + command.allowedChannels.join(", "),
+            ephemeral: true
+        })
     }
 
     if (command.allowedRoles.length > 0) {
@@ -52,6 +57,11 @@ async function performChecks(command, interaction) {
                 return true;
             }
         }
+
+        return interaction.reply({
+            content: "This command can only be used by the following roles: " + command.allowedRoles.join(", "),
+            ephemeral: true
+        })
     }
 
     return true;

@@ -42,6 +42,11 @@ async function performChecks(command, message) {
                 return true;
             }
         }
+
+        return message.reply({
+            content: "You are not allowed to use this command in this channel.",
+            ephemeral: true
+        });
     }
 
     if (command.allowedRoles.length > 0) {
@@ -51,6 +56,11 @@ async function performChecks(command, message) {
                 return true;
             }
         }
+
+        return message.reply({
+            content: "You are not allowed to use this command.",
+            ephemeral: true
+        });
     }
 
     return true;
