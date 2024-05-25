@@ -11,15 +11,15 @@ const embedLayout = {
     /** @type {string} */
     Image: null,
     /** @type {string} */
-    Thumbnail: String,
+    Thumbnail: null,
     /** @type {Array} */
     Fields: [{
         /** @type {string} */
-        Name: String,
+        Name: null,
         /** @type {string} */
-        Value: String,
+        Value: null,
         /** @type {Boolean} */
-        Inline: Boolean
+        Inline: null
     }],
     /** @type {Boolean} */
     Timestamp: null,
