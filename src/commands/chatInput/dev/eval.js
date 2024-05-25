@@ -8,6 +8,7 @@ module.exports = new Command({
     name: "eval",
     description: "Evaluate JS code.",
     devOnly: true,
+    category: "Dev",
     options: [{
         type: ApplicationCommandOptionType.String,
         name: "code",

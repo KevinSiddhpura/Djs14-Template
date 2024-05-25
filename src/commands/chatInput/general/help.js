@@ -2,6 +2,7 @@ const { Command, commandCollection } = require("../../../handlers/helpers/comman
 
 module.exports = new Command({
     name: "help",
+    category: "General",
     description: "List all commands or info about a specific command.",
     runSlash: (client, interaction) => {
         interaction.reply({

@@ -5,6 +5,7 @@ const { createEmbed } = require("../../../handlers/helpers/embed");
 new Command({
     name: "User Info",
     type: ApplicationCommandType.User,
+    category: "Context-User",
     runContextUser: async (client, interaction) => {
         const user = interaction.targetMember;
 

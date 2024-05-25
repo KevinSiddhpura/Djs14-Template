@@ -5,6 +5,7 @@ const { createEmbed } = require("../../../handlers/helpers/embed");
 new Command({
     name: "Message Info",
     type: ApplicationCommandType.Message,
+    category: "Context-Message",
     runContextMessage: async (client, interaction) => {
         const message = interaction.targetMessage;
 
