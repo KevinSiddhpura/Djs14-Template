@@ -79,7 +79,7 @@ module.exports = {
             logger.debug(`Started refreshing ${process.env.TYPE == "dev" ? "dev" : "prod"} application (/) commands.`);
 
             const data = await rest.put(process.env.TYPE == "dev" ? Routes.applicationGuildCommands(client.user.id, dev_guild) : Routes.applicationCommands(client.user.id), {
-                body: commands
+                body: process.argv.includes("--reset-cmds") ? {} : commands
             });
 
             logger.info(`Successfully reloaded ${data.length} ${process.env.TYPE == "dev" ? "dev" : "prod"} commands.`);

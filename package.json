@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon src/index.js",
+    "reset-cmds": "node src/index.js --reset-cmds",
     "start": "node src/index.js"
   },
   "keywords": [

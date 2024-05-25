@@ -77,7 +77,7 @@ module.exports = {
         if (interaction.isChatInputCommand()) {
             /**@type {Command} */
             const command = commandCollection.get(interaction.commandName);
-            if (!command) {
+            if (!command || !command.runSlash) {
                 return interaction.reply({
                     content: "The command does not exist or was not updated.",
                     ephemeral: true
@@ -90,7 +90,7 @@ module.exports = {
         } else if (interaction.isUserContextMenuCommand()) {
             /**@type {Command} */
             const command = commandCollection.get(interaction.commandName);
-            if (!command) {
+            if (!command || !command.runContextUser) {
                 return interaction.reply({
                     content: "The command does not exist or was not updated.",
                     ephemeral: true
@@ -103,7 +103,7 @@ module.exports = {
         } else if (interaction.isMessageContextMenuCommand()) {
             /**@type {Command} */
             const command = commandCollection.get(interaction.commandName);
-            if (!command) {
+            if (!command || !command.runContextMessage) {
                 return interaction.reply({
                     content: "The command does not exist or was not updated.",
                     ephemeral: true

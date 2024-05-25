@@ -1,7 +1,8 @@
-const { Client, Message } = require("discord.js");
+const { Client, Message, PermissionFlagsBits } = require("discord.js");
 const { commandCollection, Command } = require("../../handlers/helpers/command");
-const { prefixes } = require("../../config");
+const { prefixes, devs } = require("../../config");
 const { findChannel, findRole } = require("../../handlers/utils");
+const logger = require("../../handlers/helpers/logger");
 
 /**
  * 
@@ -18,7 +19,7 @@ async function performChecks(command, message) {
     };
 
     if (command.devOnly) {
-        if (!devs.includes(message.user.id)) {
+        if (!devs.includes(message.author.id)) {
             return message.reply({
                 content: "This command is only for developers.",
                 ephemeral: true
@@ -27,7 +28,7 @@ async function performChecks(command, message) {
     };
 
     if (command.adminOnly) {
-        if (!message.member.permissions.has(PermissionFlagsBits.Administrator) || !devs.includes(message.user.id)) {
+        if (!message.member.permissions.has(PermissionFlagsBits.Administrator) || !devs.includes(message.author.id)) {
             return message.reply({
                 content: "This command is only for administrators.",
                 ephemeral: true
@@ -81,7 +82,7 @@ module.exports = {
         const commandUsed = message.content.slice(prefix.length).split(/ +/).shift().toLowerCase();
         /*** @type {Command}*/
         const command = commandCollection.get(commandUsed) || commandCollection.find( /** @param {Command} cmd */ cmd => cmd.aliases.length > 0 && cmd.aliases.includes(commandUsed));
-        if (!command) return;
+        if (!command || !command.runLegacy) return;
 
         await performChecks(command, message).then(() => {
             const args = message.content.slice(prefix.length + commandUsed.length).trim().split(/ +/g) || [];
