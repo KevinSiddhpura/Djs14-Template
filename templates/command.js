@@ -6,6 +6,7 @@ module.exports = new Command({
     enabled: true,
     name: "name",
     description: "description",
+    category: "category",
     type: ApplicationCommandType.ChatInput,
     // Optional | Default is []
     options: [{
