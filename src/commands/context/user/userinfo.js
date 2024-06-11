@@ -2,7 +2,7 @@ const { ApplicationCommandType, Colors } = require("discord.js");
 const { Command } = require("../../../handlers/helpers/command");
 const { createEmbed } = require("../../../handlers/helpers/embed");
 
-new Command({
+module.exports = new Command({
     name: "User Info",
     type: ApplicationCommandType.User,
     category: "Context-User",
