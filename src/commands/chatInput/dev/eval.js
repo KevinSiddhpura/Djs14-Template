@@ -4,7 +4,7 @@ const { createEmbed } = require("../../../handlers/helpers/embed");
 const logger = require("../../../handlers/helpers/logger");
 const util = require("util");
 
-module.exports = new Command({
+new Command({
     name: "eval",
     description: "Evaluate JS code.",
     devOnly: true,

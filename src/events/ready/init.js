@@ -4,7 +4,7 @@ const { registerCommands } = require("../../handlers/utils");
 
 module.exports = {
     once: true,
-    
+
     /**
      * @param {Client} client 
      */

@@ -1,7 +1,7 @@
 const { ApplicationCommandType, ApplicationCommandOptionType } = require("discord.js");
 const { Command } = require("../src/handlers/helpers/command");
 
-module.exports = new Command({
+new Command({
     // Optional | Default is true
     enabled: true,
     name: "name",

@@ -1,6 +1,6 @@
 const { Command, commandCollection } = require("../../../handlers/helpers/command");
 
-module.exports = new Command({
+new Command({
     name: "help",
     category: "General",
     description: "List all commands or info about a specific command.",

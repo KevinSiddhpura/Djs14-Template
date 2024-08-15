@@ -38,11 +38,9 @@ class EmbedCreator {
     constructor(options) {
         const embedOptions = { ...options };
 
-        Object.entries(embedOptions)
-            .forEach(([k, v]) => this[k] = v || null)
+        Object.entries(embedOptions).forEach(([k, v]) => this[k] = v || null)
 
         const Embed = new EmbedBuilder();
-
         if (this.Title) Embed.setTitle(this.Title);
         if (this.Description) Embed.setDescription(this.Description);
         if (this.Color) Embed.setColor(this.Color);
@@ -69,4 +67,4 @@ class EmbedCreator {
 /**@param {embedLayout[]} embedOptions */
 const createEmbed = (embedOptions) => embedOptions.map(embed => new EmbedCreator(embed));
 
-module.exports = { createEmbed }
+module.exports = { createEmbed, embedLayout }
