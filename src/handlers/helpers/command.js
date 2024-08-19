@@ -3,6 +3,13 @@ const logger = require("./logger");
 
 const commandCollection = new Collection();
 
+const choicesLayout = {
+    /** @type {string} */
+    name: null,
+    /** @type {string} */
+    value: null
+}
+
 const optionsLayout = {
     /** @type {ApplicationCommandOptionType} */
     type: null,
@@ -12,7 +19,7 @@ const optionsLayout = {
     description: null,
     /** @type {boolean} */
     required: null,
-    /** @type {Array} */
+    /** @type {choicesLayout[]} */
     choices: [],
     /** @type {ChannelType[]} */
     channelTypes: [],
@@ -118,7 +125,8 @@ class Command {
             required: o.required || false,
             choices: o.choices || [],
             channelTypes: o.channelTypes || [],
-            autocomplete: o.autocomplete || false
+            autocomplete: o.autocomplete || false,
+            options: o.options || []
         })) || [];
 
         commandCollection.set(this.name, this);
