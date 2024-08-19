@@ -11,6 +11,6 @@ module.exports = {
 
     run: async (client) => {
         logger.info(`Logged in as ${client.user.username}!`);
-        await registerCommands(client, process.env.TOKEN, "dev");
+        await registerCommands(client, process.env.TOKEN);
     }
 }
