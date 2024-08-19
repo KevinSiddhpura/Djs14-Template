@@ -88,6 +88,43 @@ module.exports = {
         }
     },
 
+    reloadCommands: async () => {
+        commandCollection.clear();
+
+        let deleted = 0;
+
+        const commandFolders = {
+            chatInput: module.exports.getFiles(path.join(__dirname, "../commands/chatInput"), true),
+            context: module.exports.getFiles(path.join(__dirname, "../commands/context"), true),
+        };
+
+        for (const folders of Object.values(commandFolders)) {
+            for (const folder of folders) {
+                const files = module.exports.getFiles(folder);
+                for (const file of files) {
+                    if (!file.endsWith(".js")) continue;
+                    try {
+                        delete require.cache[require.resolve(file)];
+                        ++deleted;
+                    } catch (error) {
+                        logger.error(error);
+                    }
+                }
+            }
+        };
+
+        module.exports.requireCommands();
+        setTimeout(() => {
+            if (deleted == commandCollection.size) {
+                logger.debug("Reloaded commands");
+                return true;
+            } else {
+                logger.error("Failed to reload certain command(s), check logs.");
+                return false;
+            }
+        }, 2000);
+    },
+
     findChannel: (input, guild) => {
         return guild.channels.cache.find(channel => channel.name == input || channel.id == input);
     },
