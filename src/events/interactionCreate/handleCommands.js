@@ -12,27 +12,33 @@ const { findChannel, findRole } = require("../../handlers/utils");
 
 async function performChecks(command, interaction) {
     if (!command.enabled) {
-        return interaction.reply({
+        interaction.reply({
             content: "This command is disabled.",
             ephemeral: true
-        })
+        });
+
+        return false;
     };
 
     if (command.devOnly) {
         if (!devs.includes(interaction.user.id)) {
-            return interaction.reply({
+            interaction.reply({
                 content: "This command is only for developers.",
                 ephemeral: true
-            })
+            });
+
+            return false;
         }
     };
 
     if (command.adminOnly) {
         if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator) || !devs.includes(interaction.user.id)) {
-            return interaction.reply({
+            interaction.reply({
                 content: "This command is only for administrators.",
                 ephemeral: true
-            })
+            });
+
+            return false;
         }
     }
 
@@ -44,10 +50,12 @@ async function performChecks(command, interaction) {
             }
         }
 
-        return interaction.reply({
+        interaction.reply({
             content: "This command can only be used in the following channels: " + command.allowedChannels.join(", "),
             ephemeral: true
-        })
+        });
+
+        return false;
     }
 
     if (command.allowedRoles.length > 0) {
@@ -58,10 +66,12 @@ async function performChecks(command, interaction) {
             }
         }
 
-        return interaction.reply({
+        interaction.reply({
             content: "This command can only be used by the following roles: " + command.allowedRoles.join(", "),
             ephemeral: true
-        })
+        });
+
+        return false;
     }
 
     return true;

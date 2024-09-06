@@ -12,27 +12,33 @@ const logger = require("../../handlers/helpers/logger");
 
 async function performChecks(command, message) {
     if (!command.enabled) {
-        return message.reply({
+        message.reply({
             content: "This command is disabled.",
             ephemeral: true
-        })
+        });
+
+        return false;
     };
 
     if (command.devOnly) {
         if (!devs.includes(message.author.id)) {
-            return message.reply({
+            message.reply({
                 content: "This command is only for developers.",
                 ephemeral: true
-            })
+            });
+
+            return false;
         }
     };
 
     if (command.adminOnly) {
         if (!message.member.permissions.has(PermissionFlagsBits.Administrator) || !devs.includes(message.author.id)) {
-            return message.reply({
+            message.reply({
                 content: "This command is only for administrators.",
                 ephemeral: true
-            })
+            });
+
+            return false;
         }
     }
 
@@ -44,10 +50,12 @@ async function performChecks(command, message) {
             }
         }
 
-        return message.reply({
+        message.reply({
             content: "You are not allowed to use this command in this channel.",
             ephemeral: true
         });
+
+        return false;
     }
 
     if (command.allowedRoles.length > 0) {
@@ -58,10 +66,12 @@ async function performChecks(command, message) {
             }
         }
 
-        return message.reply({
+        message.reply({
             content: "You are not allowed to use this command.",
             ephemeral: true
         });
+
+        return false;
     }
 
     return true;
