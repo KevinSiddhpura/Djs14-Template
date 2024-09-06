@@ -88,6 +88,38 @@ module.exports = {
         }
     },
 
+    reloadConfig: async () => {
+        try {
+            delete require.cache[require.resolve("../config")];
+            require("../config");
+            logger.debug("Reloaded config");   
+            return true;
+        } catch (error) {
+            logger.error(error);
+            return false;
+        }
+    },
+
+    reloadEvents: async () => {
+        const eventFolders = module.exports.getFiles(path.join(__dirname, "../events"), true);
+
+        for (const folder of eventFolders) {
+            const files = module.exports.getFiles(folder);
+            for (const file of files) {
+                if (!file.endsWith(".js")) continue;
+                try {
+                    delete require.cache[require.resolve(file)];
+                    require(file);
+                    logger.debug(`Reloaded ${file}`);
+                } catch (error) {
+                    logger.error(error);
+                }
+            }
+        }
+
+        return true;
+    },
+
     reloadCommands: async () => {
         commandCollection.clear();
 
@@ -106,6 +138,7 @@ module.exports = {
                     try {
                         delete require.cache[require.resolve(file)];
                         ++deleted;
+                        logger.debug(`Reloaded ${file}`);
                     } catch (error) {
                         logger.error(error);
                     }
