@@ -1,6 +1,6 @@
-const { Schema } = require("mongoose");
+const mongoose = require("mongoose");
 
-module.exports = new Schema({
+const testSchema = new mongoose.Schema({
     guildID: {
         type: String
     },
@@ -16,3 +16,6 @@ module.exports = new Schema({
 }, {
     timestamps: true,
 });
+
+const testModal = mongoose.model("test", testSchema);
+module.exports = testModal;

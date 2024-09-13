@@ -11,15 +11,12 @@ const mongoConnection = async () => {
         logger.error(error);
         process.exit(1);
     }
-
+    
     const schemaFiles = getFiles(path.join(__dirname, "../models"));
-
     for (const file of schemaFiles) {
         if (!file.endsWith(".js")) continue;
-
         const name = file.split(path.sep).pop().split(".")[0];
-        mongoose.model(name, require(file));
-        logger.debug(`Loaded model: ${name}`);
+        logger.debug(`Loaded schema file: ${name}.js`);
     }
 }
 
