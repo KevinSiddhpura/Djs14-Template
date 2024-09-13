@@ -1,4 +1,4 @@
-const { embedLayout, createEmbed } = require("./embed");
+const { embedLayout, createEmbed } = require("./helpers/embed");
 
 const IMessage = {
     /** @type {string[]} */
@@ -41,4 +41,4 @@ class MessageCreator {
 
 const createMessage = (messageOptions) => new MessageCreator(messageOptions);
 
-module.exports = { createMessage }
+module.exports = createMessage;
