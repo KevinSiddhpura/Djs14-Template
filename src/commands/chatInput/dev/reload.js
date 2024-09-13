@@ -1,7 +1,7 @@
 const { ApplicationCommandType, ApplicationCommandOptionType, Colors } = require("discord.js");
 const { Command, commandCollection } = require("../../../handlers/helpers/command");
 const { reloadCommands, reloadEvents, reloadConfig } = require("../../../handlers/utils");
-const { createMessage } = require("../../../handlers/helpers/createMessage");
+const createMessage = require("../../../handlers/createMessage");
 
 new Command({
     enabled: true,
