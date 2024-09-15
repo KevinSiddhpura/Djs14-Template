@@ -50,16 +50,16 @@ const commandLayout = {
     allowedRoles: [],
     /** @type {string[]} */
     allowedChannels: [],
-
+    
     /**
      * To run a slash command
      * @param {Client} client 
      * @param {ChatInputCommandInteraction} interaction 
-     */
-
-    runSlash: async (client, interaction) => { },
-
-    /**
+    */
+   
+   runSlash: async (client, interaction) => { },
+   
+   /**
     * To run a context menu command (message)
     * @param {Client} client 
     * @param {MessageContextMenuCommandInteraction} interaction 
@@ -133,4 +133,4 @@ class Command {
     }
 }
 
-module.exports = { Command, commandCollection };
+module.exports = { Command, /** @type {Map<string, Command>} */ commandCollection };
