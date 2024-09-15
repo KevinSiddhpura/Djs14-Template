@@ -6,7 +6,7 @@ const createMessage = require("../../../handlers/createMessage");
 new Command({
     enabled: true,
     name: "reload",
-    description: "Reload events and commands",
+    description: "Reload events, commands & config",
     category: "Dev",
     type: ApplicationCommandType.ChatInput,
     options: [{
