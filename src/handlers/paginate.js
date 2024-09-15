@@ -1,5 +1,4 @@
 const { ButtonBuilder, Message, ActionRowBuilder } = require("discord.js");
-const createMessage = require("./createMessage")
 const { embedLayout } = require("./helpers/embed");
 const { paginationButtons } = require("../config");
 const logger = require("./helpers/logger");
@@ -38,9 +37,12 @@ class Pagination {
             return;
         }
 
-        if (!usersAllowed) usersAllowed = message.author.id;
+        if (!usersAllowed) {
+            logger.error("Pagination: Users allowed are not provided");
+            return;
+        }
 
-        this.pages = messageOptions.map((option) => createMessage(option));
+        this.pages = messageOptions
         this.message = message;
         this.usersAllowed = usersAllowed;
         this.currentPageIndex = 0;
@@ -101,10 +103,10 @@ class Pagination {
 
             const row = this.getComponents();
             await interaction.update({
-                content: this.pages[this.currentPageIndex].content,
-                embeds: this.pages[this.currentPageIndex].embeds,
+                content: this.pages[this.currentPageIndex].content || null,
+                embeds: this.pages[this.currentPageIndex].embeds || null,
                 components: [row],
-            });
+            }).catch(logger.error);
         });
 
 
@@ -113,10 +115,10 @@ class Pagination {
         });
 
         await this.message.edit({
-            content: this.pages[0].content,
-            embeds: this.pages[0].embeds,
+            content: this.pages[0].content || null,
+            embeds: this.pages[0].embeds || null,
             components: [this.getComponents()],
-        });
+        }).catch(logger.error);
     }
 }
 
