@@ -1,5 +1,5 @@
 const { Client, PermissionFlagsBits } = require("discord.js");
-const { commandCollection, Command } = require("../../handlers/helpers/command");
+const { getCommands } = require("../../handlers/helpers/command");
 const { devs } = require("../../config");
 const logger = require("../../handlers/helpers/logger");
 const { findChannel, findRole } = require("../../handlers/utils");
@@ -84,8 +84,9 @@ module.exports = {
     */
 
     run: async (client, interaction) => {
+        const commandCollection = getCommands();
+
         if (interaction.isChatInputCommand()) {
-            /**@type {Command} */
             const command = commandCollection.get(interaction.commandName);
             if (!command || !command.runSlash) {
                 return interaction.reply({
@@ -98,7 +99,6 @@ module.exports = {
                 command.runSlash(client, interaction);
             }).catch(error => logger.error(error));
         } else if (interaction.isUserContextMenuCommand()) {
-            /**@type {Command} */
             const command = commandCollection.get(interaction.commandName);
             if (!command || !command.runContextUser) {
                 return interaction.reply({
@@ -111,7 +111,6 @@ module.exports = {
                 command.runContextUser(client, interaction);
             }).catch(error => logger.error(error));
         } else if (interaction.isMessageContextMenuCommand()) {
-            /**@type {Command} */
             const command = commandCollection.get(interaction.commandName);
             if (!command || !command.runContextMessage) {
                 return interaction.reply({

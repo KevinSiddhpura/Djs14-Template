@@ -1,5 +1,5 @@
 const { Client, Message, PermissionFlagsBits } = require("discord.js");
-const { commandCollection, Command } = require("../../handlers/helpers/command");
+const { getCommands } = require("../../handlers/helpers/command");
 const { prefixes, devs } = require("../../config");
 const { findChannel, findRole } = require("../../handlers/utils");
 const logger = require("../../handlers/helpers/logger");
@@ -85,13 +85,13 @@ module.exports = {
 
     run: async (client, message) => {
         if (message.author.bot || !message.guild) return;
+        const commandCollection = getCommands();
 
         const prefix = prefixes.find((prefix) => message.content.startsWith(prefix));
         if (!prefix) return;
 
         const commandUsed = message.content.slice(prefix.length).split(/ +/).shift().toLowerCase();
-        /*** @type {Command}*/
-        const command = commandCollection.get(commandUsed) || commandCollection.find( /** @param {Command} cmd */ cmd => cmd.aliases.length > 0 && cmd.aliases.includes(commandUsed));
+        const command = commandCollection.get(commandUsed) || commandCollection.find(cmd => cmd.aliases.length > 0 && cmd.aliases.includes(commandUsed));
         if (!command || !command.runLegacy) return;
 
         await performChecks(command, message).then(() => {
