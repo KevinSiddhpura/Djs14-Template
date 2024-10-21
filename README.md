@@ -36,7 +36,7 @@ npm start
 ## Resources
 - [Discord.js Guide](https://discordjs.guide/#before-you-begin)
 - [Discord.js Documentation](https://discord.js.org/docs/packages/discord.js/main)
-- [Mongoosejs Documentation](https://mongoosejs.com/docs/)
+- [Better-Sqlite3 Documentation](https://github.com/WiseLibs/better-sqlite3/blob/HEAD/docs/api.md)
 
 ## Acknowledgments
 This project is a continuous effort. I will appreciate your feedbacks.
