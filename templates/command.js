@@ -1,5 +1,5 @@
 const { ApplicationCommandType, ApplicationCommandOptionType } = require("discord.js");
-const { Command } = require("../src/handlers/helpers/command");
+const Command = require("../src/handlers/helpers/command");
 
 new Command({
     // Optional | Default is true
