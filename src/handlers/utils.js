@@ -1,206 +1,229 @@
 const path = require("path");
 const fs = require("fs");
 const { REST, Routes } = require("discord.js");
-const { commandCollection } = require("./helpers/command");
 const logger = require("./helpers/logger");
 const { dev_guild } = require("../config");
-const { default: axios } = require("axios");
+const axios = require("axios");
+const { commandsCollection, getCommands } = require("./helpers/command");
 
-module.exports = {
-    wait: (time) => new Promise(resolve => setTimeout(resolve, ms(time))),
+/**
+ * A utility class containing various helper functions for common tasks.
+ */
+class Utils {
 
-    paste: (data, site = "https://paste.kwin.in") => {
-        return new Promise((resolve, reject) => {
-            if (!data) {
-                reject(new Error("No data provided"));
-                return;
-            }
+    /**
+     * Waits for a specified amount of time before resolving.
+     * @param {number} time - Time to wait in milliseconds.
+     * @returns {Promise<void>}
+     */
+    static wait(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
 
-            axios.post(`${site}/documents`, data)
-                .then(res => {
-                    const json = res.data;
-                    if (!json || !json.key) {
-                        reject(new Error("Invalid response from paste site"));
-                    }
-
-                    resolve(`${site}/${json.key}`);
-                })
-        })
-    },
-
-    getFiles: (dir, foldersOnly = false) => {
-        const found = [];
-
-        const files = fs.readdirSync(dir, {
-            withFileTypes: true
-        });
-
-        for (const file of files) {
-            const filePath = path.join(dir, file.name);
-
-            if (foldersOnly) {
-                if (file.isDirectory()) found.push(filePath);
-            } else {
-                if (file.isFile()) found.push(filePath);
-            }
-        }
-
-        return found;
-    },
-
-    requireCommands: () => {
-        const chatInputFolders = module.exports.getFiles(path.join(__dirname, "../commands/chatInput"), true);
-        const contextFolders = module.exports.getFiles(path.join(__dirname, "../commands/context"), true);
-
-        for (const commandFolder of chatInputFolders) {
-            const commands = module.exports.getFiles(commandFolder);
-            for (const command of commands) {
-                if (!command.endsWith(".js")) continue;
-                require(command);
-            }
-        }
-
-        for (const commandFolder of contextFolders) {
-            const commands = module.exports.getFiles(commandFolder);
-            for (const command of commands) {
-                if (!command.endsWith(".js")) continue;
-                require(command);
-            }
-        }
-
-        return true;
-    },
-
-    registerCommands: async (client, token) => {
-        const rest = new REST({ version: "10" }).setToken(token);
-        const commands = commandCollection.toJSON();
+    /**
+     * Uploads the provided data to a paste site and returns the link.
+     * @param {string} data - The data to upload.
+     * @param {string} [site="https://paste.kwin.in"] - The paste site URL.
+     * @returns {Promise<string>} - The URL of the paste.
+     */
+    static async paste(data, site = "https://paste.kwin.in") {
+        if (!data) throw new Error("No data provided");
 
         try {
-            logger.debug(`Started refreshing ${process.env.TYPE == "dev" ? "dev" : "prod"} application (/) commands.`);
-
-            const data = await rest.put(process.env.TYPE == "dev" ? Routes.applicationGuildCommands(client.user.id, dev_guild) : Routes.applicationCommands(client.user.id), {
-                body: process.argv.includes("--reset-cmds") ? {} : commands
-            });
-
-            logger.info(`Successfully reloaded ${data.length} ${process.env.TYPE == "dev" ? "dev" : "prod"} commands.`);
+            const res = await axios.post(`${site}/documents`, { content: data });
+            if (!res.data || !res.data.key) throw new Error("Invalid response from paste site");
+            return `${site}/${res.data.key}`;
         } catch (error) {
-            logger.error(error);
+            throw new Error(`Failed to paste data: ${error.message}`);
         }
-    },
+    }
 
-    reloadConfig: async () => {
+    /**
+     * Retrieves files or folders from the specified directory.
+     * @param {string} dir - The directory path.
+     * @param {boolean} [foldersOnly=false] - Whether to retrieve only folders.
+     * @returns {string[]} - An array of file or folder paths.
+     */
+    static getFiles(dir, foldersOnly = false) {
+        return fs.readdirSync(dir, { withFileTypes: true })
+            .filter(file => foldersOnly ? file.isDirectory() : file.isFile())
+            .map(file => path.join(dir, file.name));
+    }
+
+    /**
+     * Loads and requires all command files.
+     * @returns {boolean} - True if successful.
+     */
+    static requireCommands() {
+        const chatInputFolders = Utils.getFiles(path.join(__dirname, "../commands/chatInput"), true);
+        const contextFolders = Utils.getFiles(path.join(__dirname, "../commands/context"), true);
+
+        [...chatInputFolders, ...contextFolders].forEach(folder => {
+            Utils.getFiles(folder).forEach(file => {
+                if (file.endsWith(".js")) require(file);
+            });
+        });
+
+        return true;
+    }
+
+    /**
+     * Registers application commands with Discord's API.
+     * @param {Client} client - The Discord client.
+     * @param {string} token - The bot token.
+     * @returns {Promise<void>}
+     */
+    static registerCommands(client) {
+        new Promise(async (res, rej) => {
+            const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+            const commands = getCommands();
+
+            try {
+                logger.debug(`Attempting to refresh commands`);
+                const route = process.env.TYPE === "dev"
+                    ? Routes.applicationGuildCommands(client.user.id, dev_guild)
+                    : Routes.applicationCommands(client.user.id);
+
+                const data = await rest.put(route, { body: process.argv.includes("--reset-cmds") ? [] : commands });
+                logger.info(`Successfully reloaded ${data.length} commands`);
+                res(true);
+            } catch (error) {
+                logger.error(`Failed to register commands: ${error}`);
+                rej(false)
+            }
+        })
+    }
+
+    /**
+     * Reloads the configuration file.
+     * @returns {Promise<boolean>} - True if reloaded successfully, false otherwise.
+     */
+    static async reloadConfig() {
         try {
             delete require.cache[require.resolve("../config")];
             require("../config");
-            logger.debug("Reloaded config");   
+            logger.debug("Reloaded config");
             return true;
         } catch (error) {
-            logger.error(error);
+            logger.error(`Failed to reload config: ${error.message}`);
             return false;
         }
-    },
+    }
 
-    reloadEvents: async () => {
-        const eventFolders = module.exports.getFiles(path.join(__dirname, "../events"), true);
+    /**
+     * Reloads all event files.
+     * @returns {Promise<boolean>} - True if successful, false otherwise.
+     */
+    static async reloadEvents() {
+        const eventFolders = Utils.getFiles(path.join(__dirname, "../events"), true);
 
         for (const folder of eventFolders) {
-            const files = module.exports.getFiles(folder);
+            const files = Utils.getFiles(folder);
             for (const file of files) {
-                if (!file.endsWith(".js")) continue;
-                try {
-                    delete require.cache[require.resolve(file)];
-                    require(file);
-                    logger.debug(`Reloaded ${file}`);
-                } catch (error) {
-                    logger.error(error);
+                if (file.endsWith(".js")) {
+                    try {
+                        delete require.cache[require.resolve(file)];
+                        require(file);
+                        logger.debug(`Reloaded ${file}`);
+                    } catch (error) {
+                        logger.error(`Failed to reload event ${file}: ${error.message}`);
+                    }
                 }
             }
         }
-
         return true;
-    },
+    }
 
-    reloadCommands: async () => {
+    /**
+     * Reloads all commands and clears the command collection.
+     * @returns {Promise<boolean>} - True if successful, false otherwise.
+     */
+    static async reloadCommands() {
         commandCollection.clear();
-
         let deleted = 0;
 
         const commandFolders = {
-            chatInput: module.exports.getFiles(path.join(__dirname, "../commands/chatInput"), true),
-            context: module.exports.getFiles(path.join(__dirname, "../commands/context"), true),
+            chatInput: Utils.getFiles(path.join(__dirname, "../commands/chatInput"), true),
+            context: Utils.getFiles(path.join(__dirname, "../commands/context"), true),
         };
 
         for (const folders of Object.values(commandFolders)) {
             for (const folder of folders) {
-                const files = module.exports.getFiles(folder);
+                const files = Utils.getFiles(folder);
                 for (const file of files) {
-                    if (!file.endsWith(".js")) continue;
-                    try {
-                        delete require.cache[require.resolve(file)];
-                        ++deleted;
-                        logger.debug(`Reloaded ${file}`);
-                    } catch (error) {
-                        logger.error(error);
+                    if (file.endsWith(".js")) {
+                        try {
+                            delete require.cache[require.resolve(file)];
+                            deleted++;
+                            logger.debug(`Reloaded ${file}`);
+                        } catch (error) {
+                            logger.error(`Failed to reload command ${file}: ${error.message}`);
+                        }
                     }
                 }
             }
-        };
-
-        module.exports.requireCommands();
-        setTimeout(() => {
-            if (deleted == commandCollection.size) {
-                logger.debug("Reloaded commands");
-                return true;
-            } else {
-                logger.error("Failed to reload certain command(s), check logs.");
-                return false;
-            }
-        }, 2000);
-    },
-
-    findChannel: (input, guild) => {
-        return guild.channels.cache.find(channel => channel.name == input || channel.id == input);
-    },
-
-    findRole: (input, guild) => {
-        return guild.roles.cache.find(role => role.name == input || role.id == input);
-    },
-
-    findChannels: (input, guild) => {
-        return guild.channels.cache.filter(channel => channel.name == input || channel.id == input);
-    },
-
-    findRoles: (input, guild) => {
-        return guild.roles.cache.filter(role => role.name == input || role.id == input);
-    },
-
-    addSpace: (string, number, inFront = true) => {
-        if (inFront) {
-            return string + new Array(number).fill("\u200b ").join("");
-        } else {
-            return new Array(number).fill("\u200b ").join("") + string;
         }
-    },
 
-    capitalize: (string, allWords = false) => {
-        if (allWords) {
-            return string.split(" ").map(word =>
-                word.charAt(0).toUpperCase() + word.slice(1)
+        Utils.requireCommands();
 
-            ).join(" ");
-        } else {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-    },
+        return new Promise(resolve => {
+            setTimeout(() => {
+                if (deleted === commandCollection.size) {
+                    logger.debug("Reloaded commands successfully");
+                    resolve(true);
+                } else {
+                    logger.error("Failed to reload certain commands");
+                    resolve(false);
+                }
+            }, 2000);
+        });
+    }
 
-    splitArray: (array, perArray) => {
+    /**
+     * Finds a channel in the guild by name or ID.
+     * @param {string} input - The channel name or ID.
+     * @param {Guild} guild - The Discord guild.
+     * @returns {Channel|null} - The found channel, or null if not found.
+     */
+    static findChannel(input, guild) {
+        return guild.channels.cache.find(channel => channel.name === input || channel.id === input);
+    }
+
+    /**
+     * Finds a role in the guild by name or ID.
+     * @param {string} input - The role name or ID.
+     * @param {Guild} guild - The Discord guild.
+     * @returns {Role|null} - The found role, or null if not found.
+     */
+    static findRole(input, guild) {
+        return guild.roles.cache.find(role => role.name === input || role.id === input);
+    }
+
+    /**
+     * Capitalizes the first letter of a string or every word in a string.
+     * @param {string} string - The string to capitalize.
+     * @param {boolean} [allWords=false] - Whether to capitalize every word.
+     * @returns {string} - The capitalized string.
+     */
+    static capitalize(string, allWords = false) {
+        return allWords
+            ? string.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")
+            : string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    /**
+     * Splits an array into smaller arrays.
+     * @param {Array} array - The array to split.
+     * @param {number} perArray - The number of items per smaller array.
+     * @returns {Array[]} - An array of smaller arrays.
+     */
+    static splitArray(array, perArray) {
         const arrays = [];
-        const maxArrays = Math.ceil(array.length / perArray);
-
-        for (let i = 0; i < maxArrays; i++) {
-            arrays.push(array.slice((i * perArray), (i * perArray) + perArray))
+        for (let i = 0; i < Math.ceil(array.length / perArray); i++) {
+            arrays.push(array.slice(i * perArray, (i + 1) * perArray));
         }
-
-        return arrays
+        return arrays;
     }
 }
+
+module.exports = Utils;

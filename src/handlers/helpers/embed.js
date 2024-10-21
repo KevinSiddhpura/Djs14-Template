@@ -1,70 +1,121 @@
 const { EmbedBuilder } = require("@discordjs/builders");
 const { Colors } = require("discord.js");
 
-const embedLayout = {
-    /** @type {string} */
-    Title: null,
-    /** @type {string} */
-    Description: null,
-    /** @type {Colors} */
-    Color: null,
-    /** @type {string} */
-    Image: null,
-    /** @type {string} */
-    Thumbnail: null,
-    /** @type {Array} */
-    Fields: [{
-        /** @type {string} */
-        Name: null,
-        /** @type {string} */
-        Value: null,
-        /** @type {Boolean} */
-        Inline: null
-    }],
-    /** @type {Boolean} */
-    Timestamp: null,
-    /** @type {string} */
-    FooterText: null,
-    /** @type {string} */
-    FooterIcon: null,
-    /** @type {string} */
-    AuthorName: null,
-    /** @type {string} */
-    AuthorIcon: null,
-}
+/**
+ * The layout for embed options
+ * @typedef {Object} EmbedLayout
+ * @property {string} Title - The title of the embed.
+ * @property {string} Description - The description of the embed.
+ * @property {Colors} Color - The color of the embed.
+ * @property {string} Image - The image URL of the embed.
+ * @property {string} Thumbnail - The thumbnail URL of the embed.
+ * @property {Array<Object>} Fields - The fields of the embed.
+ * @property {boolean} Timestamp - Whether to include a timestamp.
+ * @property {string} FooterText - The text for the footer.
+ * @property {string} FooterIcon - The icon URL for the footer.
+ * @property {string} AuthorName - The name for the author section.
+ * @property {string} AuthorIcon - The icon URL for the author section.
+ */
 
+/**
+ * A class for creating Discord embeds using provided options.
+ */
 class EmbedCreator {
-    /**@param {embedLayout} options */
+    /**
+     * Constructs an embed from the provided layout options.
+     * @param {EmbedLayout} options - The options for the embed.
+     * @returns {EmbedBuilder} - The constructed EmbedBuilder object.
+     */
     constructor(options) {
-        const embedOptions = { ...options };
+        this.embedOptions = { ...EmbedCreator.defaultEmbedOptions(), ...options };
 
-        Object.entries(embedOptions).forEach(([k, v]) => this[k] = v || null)
+        const embed = new EmbedBuilder();
 
-        const Embed = new EmbedBuilder();
-        if (this.Title) Embed.setTitle(this.Title);
-        if (this.Description) Embed.setDescription(this.Description);
-        if (this.Color) Embed.setColor(this.Color);
-        if (this.Image) Embed.setImage(this.Image);
-        if (this.Thumbnail) Embed.setThumbnail(this.Thumbnail);
-        if (this.Timestamp) Embed.setTimestamp(Date.now());
+        // Set basic properties
+        if (this.embedOptions.Title) embed.setTitle(this.embedOptions.Title);
+        if (this.embedOptions.Description) embed.setDescription(this.embedOptions.Description);
+        if (this.embedOptions.Color) embed.setColor(this.embedOptions.Color);
+        if (this.embedOptions.Image) embed.setImage(this.embedOptions.Image);
+        if (this.embedOptions.Thumbnail) embed.setThumbnail(this.embedOptions.Thumbnail);
+        if (this.embedOptions.Timestamp) embed.setTimestamp();
 
-        if (this.FooterText && this.FooterIcon) Embed.setFooter({ text: this.FooterText, iconURL: this.FooterIcon });
-        else if (this.FooterText) Embed.setFooter({ text: this.FooterText });
-        else if (this.FooterIcon) Embed.setFooter({ iconURL: this.FooterIcon });
+        // Set footer
+        if (this.embedOptions.FooterText || this.embedOptions.FooterIcon) {
+            const footerOptions = {
+                text: this.embedOptions.FooterText || '',
+                iconURL: this.embedOptions.FooterIcon || null
+            };
+            embed.setFooter(footerOptions);
+        }
 
-        if (this.AuthorName && this.AuthorIcon) Embed.setAuthor({ name: this.AuthorName, iconURL: this.AuthorIcon });
-        else if (this.AuthorName) Embed.setAuthor({ name: this.AuthorName });
-        else if (this.AuthorIcon) Embed.setAuthor({ iconURL: this.AuthorIcon });
+        // Set author
+        if (this.embedOptions.AuthorName || this.embedOptions.AuthorIcon) {
+            const authorOptions = {
+                name: this.embedOptions.AuthorName || '',
+                iconURL: this.embedOptions.AuthorIcon || null
+            };
+            embed.setAuthor(authorOptions);
+        }
 
-        this.Fields?.forEach(f => {
-            Embed.addFields({ name: f.Name, value: f.Value, inline: f.Inline })
-        })
+        // Add fields
+        if (this.embedOptions.Fields?.length > 0) {
+            this.embedOptions.Fields.forEach(field => {
+                if (field.Name && field.Value) {
+                    embed.addFields({
+                        name: field.Name,
+                        value: field.Value,
+                        inline: field.Inline ?? false
+                    });
+                }
+            });
+        }
 
-        return Embed
+        return embed;
+    }
+
+    /**
+     * Static method to create multiple embeds from an array of embed options.
+     * @param {EmbedLayout[]} embedOptionsArray - An array of embed options.
+     * @returns {EmbedBuilder[]} - An array of EmbedBuilder objects.
+     */
+    static createEmbeds(embedOptionsArray) {
+        return embedOptionsArray.map(options => new EmbedCreator(options));
+    }
+
+    /**
+     * Provides a default embed layout that can be used as a base.
+     * @returns {EmbedLayout} - The default embed options.
+     */
+    static defaultEmbedOptions() {
+        return {
+            Title: null,
+            Description: null,
+            Color: "#313338", // Default color
+            Image: null,
+            Thumbnail: null,
+            Fields: [],
+            Timestamp: false,
+            FooterText: null,
+            FooterIcon: null,
+            AuthorName: null,
+            AuthorIcon: null,
+        };
+    }
+
+    /**
+     * Creates a simple embed with just a title, description, and optional color.
+     * @param {string} title - The title of the embed.
+     * @param {string} description - The description of the embed.
+     * @param {Colors} [color=Colors.Default] - The color of the embed.
+     * @returns {EmbedBuilder} - A simple embed.
+     */
+    static quickEmbed(title = null, description = null, color = Colors.Default) {
+        if (title == null && description == null) throw new Error("You must provide either Title or Description to create an embed");
+        return new EmbedBuilder()
+            .setTitle(title)
+            .setDescription(description)
+            .setColor(color);
     }
 }
 
-/**@param {embedLayout[]} embedOptions */
-const createEmbed = (embedOptions) => embedOptions.map(embed => new EmbedCreator(embed));
-
-module.exports = { createEmbed, embedLayout }
+module.exports = EmbedCreator

@@ -1,15 +1,28 @@
-const { Collection, ApplicationCommandType, ApplicationCommandOptionType, ChannelType, Client, ChatInputCommandInteraction, Message, MessageContextMenuCommandInteraction, UserContextMenuCommandInteraction } = require("discord.js");
+const {
+    Collection,
+    ApplicationCommandType,
+    ApplicationCommandOptionType,
+    ChannelType,
+    Client,
+    ChatInputCommandInteraction,
+    Message,
+    MessageContextMenuCommandInteraction,
+    UserContextMenuCommandInteraction
+} = require("discord.js");
+
 const logger = require("./logger");
 
-const commandCollection = new Collection();
+const commands = new Collection();
 
+// Layout for choices in command options
 const choicesLayout = {
     /** @type {string} */
     name: null,
     /** @type {string} */
     value: null
-}
+};
 
+// Layout for command options
 const optionsLayout = {
     /** @type {ApplicationCommandOptionType} */
     type: null,
@@ -18,18 +31,21 @@ const optionsLayout = {
     /** @type {string} */
     description: null,
     /** @type {boolean} */
-    required: null,
+    required: false,
     /** @type {choicesLayout[]} */
     choices: [],
     /** @type {ChannelType[]} */
     channelTypes: [],
     /** @type {boolean} */
-    autocomplete: null
+    autocomplete: false,
+    /**@type {optionsLayout[]} */
+    options: []
 };
 
+// Layout for commands
 const commandLayout = {
     /** @type {boolean} */
-    enabled: null,
+    enabled: true,
     /** @type {string} */
     category: null,
     /** @type {string} */
@@ -39,98 +55,132 @@ const commandLayout = {
     /** @type {optionsLayout[]} */
     options: [],
     /** @type {ApplicationCommandType} */
-    type: null,
+    type: ApplicationCommandType.ChatInput,
     /** @type {string[]} */
     aliases: [],
     /** @type {boolean} */
-    devOnly: null,
+    devOnly: false,
     /** @type {boolean} */
-    adminOnly: null,
+    adminOnly: false,
     /** @type {string[]} */
     allowedRoles: [],
     /** @type {string[]} */
     allowedChannels: [],
-    
+
     /**
-     * To run a slash command
+     * To run a slash command.
      * @param {Client} client 
      * @param {ChatInputCommandInteraction} interaction 
-    */
-   
-   runSlash: async (client, interaction) => { },
-   
-   /**
-    * To run a context menu command (message)
-    * @param {Client} client 
-    * @param {MessageContextMenuCommandInteraction} interaction 
-    */
+     */
+    runSlash: async (client, interaction) => { },
 
+    /**
+     * To run a message context menu command.
+     * @param {Client} client 
+     * @param {MessageContextMenuCommandInteraction} interaction 
+     */
     runContextMessage: async (client, interaction) => { },
 
     /**
-    * To run a context menu command (user)
-    * @param {Client} client 
-    * @param {UserContextMenuCommandInteraction} interaction 
-    */
-
+     * To run a user context menu command.
+     * @param {Client} client 
+     * @param {UserContextMenuCommandInteraction} interaction 
+     */
     runContextUser: async (client, interaction) => { },
 
     /**
-     * To run a prefix command
+     * To run a legacy prefix command.
      * @param {Client} client 
      * @param {Message} message 
      * @param {Array} args 
      */
-
     runLegacy: async (client, message, args) => { }
 };
 
 class Command {
-    /** @param {commandLayout} commandOptions */
+    /**
+     * Constructs a new command object.
+     * @param {commandLayout} commandOptions - The options for configuring the command.
+     */
     constructor(commandOptions) {
-        this.name = commandOptions.name;
-        if (!this.name) return logger.error(`Missing command name`);
-        if (commandCollection.has(this.name)) return logger.error(`Duplicate command name: ${this.name}`);
+        const {
+            name,
+            category,
+            enabled = true,
+            description = null,
+            type = ApplicationCommandType.ChatInput,
+            aliases = [],
+            devOnly = false,
+            adminOnly = false,
+            allowedRoles = [],
+            allowedChannels = [],
+            options = [],
+            runSlash,
+            runLegacy,
+            runContextMessage,
+            runContextUser
+        } = commandOptions;
 
-        this.category = commandOptions.category || null;
-        if (!this.category) return logger.error(`Missing command category for ${this.name}`);
+        if (!name) return logger.error("Missing command name.");
+        if (commands.has(name)) return logger.error(`Duplicate command name: ${name}`);
 
-        this.enabled = commandOptions.enabled || true;
-        this.description = commandOptions.description || null;
-        this.type = commandOptions.type || ApplicationCommandType.ChatInput;
+        if (!category) return logger.error(`Missing command category for ${name}`);
+        if (type === ApplicationCommandType.ChatInput && !description) {
+            return logger.error(`Missing description for chat input command: ${name}`);
+        }
 
-        if (!this.description && this.type == ApplicationCommandType.ChatInput) return logger.error(`Missing command description for ${this.name}`);
-        if (this.type == ApplicationCommandType.Message || this.type == ApplicationCommandType.User) this.description = null;
+        this.name = name;
+        this.category = category;
+        this.enabled = enabled;
+        this.description = description;
+        this.type = type;
+        this.aliases = aliases;
+        this.devOnly = devOnly;
+        this.adminOnly = adminOnly;
+        this.allowedRoles = allowedRoles;
+        this.allowedChannels = allowedChannels;
 
-        this.aliases = commandOptions.aliases || [];
-        this.devOnly = commandOptions.devOnly || false;
-        this.adminOnly = commandOptions.adminOnly || false;
-        this.allowedRoles = commandOptions.allowedRoles || [];
-        this.allowedChannels = commandOptions.allowedChannels || [];
+        // Ensure run functions are provided for the appropriate command type
+        this.runSlash = (type === ApplicationCommandType.ChatInput) ? runSlash : null;
+        this.runLegacy = (type === ApplicationCommandType.ChatInput) ? runLegacy : null;
 
-        this.runSlash = commandOptions.runSlash || null;
-        this.runLegacy = commandOptions.runLegacy || null;
-        if (this.type == ApplicationCommandType.ChatInput && (!this.runSlash && !this.runLegacy)) return logger.error(`Missing command fun function for ${this.name}`);
+        this.runContextMessage = (type === ApplicationCommandType.Message) ? runContextMessage : null;
+        this.runContextUser = (type === ApplicationCommandType.User) ? runContextUser : null;
 
-        this.runContextMessage = commandOptions.runContextMessage || null;
-        if (this.type == ApplicationCommandType.Message && !this.runContextMessage) return logger.error(`Missing command run context message function for ${this.name}`);
+        if (type === ApplicationCommandType.ChatInput && (!this.runSlash && !this.runLegacy)) {
+            return logger.error(`Missing run function for chat input command: ${name}`);
+        }
 
-        this.runContextUser = commandOptions.runContextUser || null;
-        if (this.type == ApplicationCommandType.User && !this.runContextUser) return logger.error(`Missing command run context user function for ${this.name}`);
+        if (type === ApplicationCommandType.Message && !this.runContextMessage) {
+            return logger.error(`Missing run function for message context command: ${name}`);
+        }
 
-        this.options = commandOptions.options?.map((o) => ({
-            type: o.type,
-            name: o.name,
-            description: o.description,
-            required: o.required || false,
-            choices: o.choices || [],
-            channelTypes: o.channelTypes || [],
-            autocomplete: o.autocomplete || false,
-            options: o.options || []
-        })) || [];
+        if (type === ApplicationCommandType.User && !this.runContextUser) {
+            return logger.error(`Missing run function for user context command: ${name}`);
+        }
 
-        commandCollection.set(this.name, this);
+        // Configure command options
+        this.options = options.map(option => ({
+            type: option.type || ApplicationCommandOptionType.String,
+            name: option.name,
+            description: option.description,
+            required: option.required || false,
+            choices: option.choices || [],
+            channelTypes: option.channelTypes || [],
+            autocomplete: option.autocomplete || false,
+            options: option.options || []
+        }));
+
+        // Add the command to the collection
+        commands.set(this.name, this);
     }
+
+    /**
+     * 
+     * @returns {Collection}
+     */
+
+    static getCommands = () => commands.toJSON();
 }
 
-module.exports = { Command, /** @type {Map<string, Command>} */ commandCollection };
+module.exports = Command;
