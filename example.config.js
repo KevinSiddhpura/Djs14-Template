@@ -1,10 +1,10 @@
 const { ButtonStyle } = require("discord.js");
 
 module.exports = {
-    dev_guild: "1290691479622254592",
-    devs: ["528627987667615755", "215712513067712513"],
+    dev_guild: "",
+    devs: [""],
 
-    prefixes: [".", "x"],
+    prefixes: ["!"],
 
     paginationButtons: {
         toFirst: {

@@ -3,3 +3,4 @@ errors.log
 \backup
 .env
 src/test.js
+src/config.js

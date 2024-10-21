@@ -11,7 +11,10 @@
   },
   "keywords": [
     "Discord.js V14",
-    "Discord.js Template"
+    "Discord.js Template",
+    "Discord.js",
+    "Discord Bot",
+    "Discord App"
   ],
   "author": "KevinSidd",
   "discord": "@kevinsidd",
@@ -22,13 +25,12 @@
   },
   "license": "GPLv3",
   "dependencies": {
-    "axios": "^1.6.8",
-    "chalk": "^4.1.2",
-    "discord.js": "^14.14.1",
+    "axios": "^1.7.7",
+    "chalk": "^5.3.0",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
     "moment": "^2.30.1",
-    "mongoose": "^8.4.0",
-    "mysql2": "^3.9.7",
-    "nodemon": "^3.1.0"
+    "mongoose": "^8.7.2",
+    "nodemon": "^3.1.7"
   }
 }

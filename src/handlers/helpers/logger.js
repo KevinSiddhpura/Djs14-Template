@@ -1,4 +1,4 @@
-const chalk = require("chalk");
+const { default: chalk } = require('chalk');
 
 const logger = {
     error(...args) {
@@ -19,4 +19,4 @@ const logger = {
     }
 }
 
-module.exports = logger
+module.exports = logger;
