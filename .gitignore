@@ -4,3 +4,4 @@ errors.log
 .env
 src/test.js
 src/config.js
+\data
