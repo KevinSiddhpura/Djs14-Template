@@ -1,6 +1,6 @@
 const { ApplicationCommandType, Colors } = require("discord.js");
-const { Command } = require("../../../handlers/helpers/command");
-const { createEmbed } = require("../../../handlers/helpers/embed");
+const Command = require("../../../handlers/helpers/command");
+const { createEmbeds } = require("../../../handlers/helpers/embed");
 
 new Command({
     name: "Message Info",
@@ -10,7 +10,7 @@ new Command({
         const message = interaction.targetMessage;
 
         return interaction.reply({
-            embeds: createEmbed([{
+            embeds: createEmbeds([{
                 Title: "Message Info",
                 Color: Colors.Aqua,
                 Description: [

@@ -1,7 +1,6 @@
 const { Colors } = require("discord.js");
-const createMessage = require("../../../handlers/createMessage");
-const { Command, commandCollection } = require("../../../handlers/helpers/command");
-const { Pagination } = require("../../../handlers/paginate");
+const Command = require("../../../handlers/helpers/command");
+const Pagination = require("../../../handlers/paginate");
 const { splitArray } = require("../../../handlers/utils");
 
 new Command({
@@ -16,7 +15,7 @@ new Command({
             fetchReply: true
         });
 
-        const _commands = commandCollection.map(c => {
+        const _commands = Command.getCommands().map(c => {
             return {
                 name: c.name,
                 category: c.category,
@@ -36,17 +35,15 @@ new Command({
                 return `> **\`${type == 1 ? `/${name}` : `${name}`}\`** • \`[${category}]\` \n- _${description}_`
             }).join("\n");
 
-            pages.push(createMessage({
+            pages.push({
                 content: `**Page** • [${pages.length + 1}/${splits.length}]`,
                 embeds: [{
-                    Title: "Help Menu",
-                    Color: Colors.Aqua,
-                    Description: group,
-                    FooterText: `Requested by ${interaction.user.username}`,
-                    FooterIcon: interaction.user.displayAvatarURL({ dynamic: true }),
-                    Timestamp: true
+                    title: "Help Menu",
+                    color: Colors.Aqua,
+                    description: group,
+                    timestamp: Date.now()
                 }],
-            }));
+            });
         }
 
         new Pagination(initialMessage, pages, interaction.user.id).paginate();

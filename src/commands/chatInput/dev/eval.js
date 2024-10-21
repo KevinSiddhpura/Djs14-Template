@@ -1,8 +1,8 @@
 const { ApplicationCommandOptionType, Colors } = require("discord.js");
-const { Command } = require("../../../handlers/helpers/command");
-const { createEmbed } = require("../../../handlers/helpers/embed");
+const Command = require("../../../handlers/helpers/command");
 const logger = require("../../../handlers/helpers/logger");
 const util = require("util");
+const { createEmbeds } = require("../../../handlers/helpers/embed");
 
 new Command({
     name: "eval",
@@ -21,7 +21,7 @@ new Command({
         const inputCode = interaction.options.getString("code");
 
         await interaction.editReply({
-            embeds: createEmbed([{
+            embeds: createEmbeds([{
                 Title: "Evaluated Code",
                 Description: "```Processing given code....```",
                 Fields: [{
@@ -41,7 +41,7 @@ new Command({
             if (typeof evaled !== "string") evaled = util.inspect(evaled, { depth: 1 });
             if (evaled.length > 4000) evaled = evaled.substring(0, 4000) + "...";
             await interaction.editReply({
-                embeds: createEmbed([{
+                embeds: createEmbeds([{
                     Title: "Evaluated Code",
                     Description: `\`\`\`js\n${evaled}\n\`\`\``,
                     Fields: [{
@@ -57,7 +57,7 @@ new Command({
         } catch (error) {
             logger.error(error);
             await interaction.editReply({
-                embeds: createEmbed([{
+                embeds: createEmbeds([{
                     Title: "Evaluated Code",
                     Description: `\`\`\`js\n${error}\n\`\`\``,
                     Fields: [{

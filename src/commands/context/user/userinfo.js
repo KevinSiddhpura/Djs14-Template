@@ -1,6 +1,6 @@
 const { ApplicationCommandType, Colors } = require("discord.js");
-const { Command } = require("../../../handlers/helpers/command");
-const { createEmbed } = require("../../../handlers/helpers/embed");
+const Command = require("../../../handlers/helpers/command");
+const { createEmbeds } = require("../../../handlers/helpers/embed");
 
 new Command({
     name: "User Info",
@@ -10,7 +10,7 @@ new Command({
         const user = interaction.targetMember;
 
         return interaction.reply({
-            embeds: createEmbed([{
+            embeds: createEmbeds([{
                 Title: "User Info",
                 Color: Colors.Aqua,
                 Description: [
