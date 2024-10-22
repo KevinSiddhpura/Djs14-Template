@@ -1,5 +1,5 @@
-const { Colors } = require("discord.js");
 const Command = require("../../../handlers/helpers/command");
+const { getCommands } = require("../../../handlers/helpers/command");
 const Pagination = require("../../../handlers/paginate");
 const { splitArray } = require("../../../handlers/utils");
 
@@ -11,11 +11,10 @@ new Command({
         await interaction.deferReply({ ephemeral: false });
 
         const initialMessage = await interaction.editReply({
-            content: "Loading pagination...",
-            fetchReply: true
+            content: "Loading pagination..."
         });
 
-        const _commands = Command.getCommands().map(c => {
+        const _commands = getCommands().map(c => {
             return {
                 name: c.name,
                 category: c.category,
@@ -38,10 +37,9 @@ new Command({
             pages.push({
                 content: `**Page** • [${pages.length + 1}/${splits.length}]`,
                 embeds: [{
-                    title: "Help Menu",
-                    color: Colors.Aqua,
-                    description: group,
-                    timestamp: Date.now()
+                    Title: "Help Menu",
+                    Description: group,
+                    Timestamp: true
                 }],
             });
         }
