@@ -168,7 +168,7 @@ class Database {
         if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder)
 
         new Database("default.db").getDatabase();
-        logger.info(`Database is ready and loaded default.db`)
+        logger.info(`Database is ready & loaded default.db`)
         return true;
     }
 }
