@@ -54,7 +54,7 @@ class Pagination {
 
         for (const obj of messageOptions) {
             if (obj.embeds == null) continue;
-            messageOptions[0].embeds = createEmbeds(obj.embeds);
+            obj.embeds = createEmbeds(obj.embeds);
         }
 
         if (!usersAllowed) {
@@ -109,7 +109,7 @@ class Pagination {
         const filter = (i) => Array.isArray(this.usersAllowed) ? this.usersAllowed.includes(i.user.id) : i.user.id === this.usersAllowed;
         const collector = this.message.createMessageComponentCollector({ filter, time: 60000 * 10 }); // Collect for 10 minutes
 
-        collector.on('collect', async (interaction) => {
+        collector.on('collect', (interaction) => {
             switch (interaction.customId) {
                 case 'paginate-first':
                     this.currentPageIndex = 0;
@@ -126,11 +126,14 @@ class Pagination {
             }
 
             const row = this.getComponents();
-            await interaction.update({
+
+            interaction.message.edit({
                 content: this.pages[this.currentPageIndex].content || null,
                 embeds: this.pages[this.currentPageIndex].embeds || [],
                 components: [row],
-            }).catch(logger.error);
+            }).catch(() => null);
+
+            return interaction.deferUpdate().catch(() => null);
         });
 
         collector.on('end', () => {
@@ -138,11 +141,11 @@ class Pagination {
         });
 
         // Initialize pagination with the first page
-        await this.message.edit({
+        this.message.edit({
             content: this.pages[0].content || null,
             embeds: this.pages[0].embeds || [],
             components: [this.getComponents()],
-        }).catch(logger.error);
+        });
     }
 }
 
