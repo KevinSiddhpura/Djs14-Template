@@ -90,7 +90,7 @@ class EmbedCreator {
         return {
             Title: null,
             Description: null,
-            Color: "#313338", // Default color
+            Color: [49, 51, 56], // Default color
             Image: null,
             Thumbnail: null,
             Fields: [],
@@ -106,7 +106,7 @@ class EmbedCreator {
      * Creates a simple embed with just a title, description, and optional color.
      * @param {string} title - The title of the embed.
      * @param {string} description - The description of the embed.
-     * @param {Colors} [color=Colors.Default] - The color of the embed.
+     * @param {Colors} color - The color of the embed.
      * @returns {EmbedBuilder} - A simple embed.
      */
     static quickEmbed(title = null, description = null, color = Colors.Default) {
