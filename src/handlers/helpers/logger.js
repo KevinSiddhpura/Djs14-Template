@@ -1,20 +1,20 @@
-const { default: chalk } = require('chalk');
+const kleur = require('kleur');
 
 const logger = {
     error(...args) {
-        const prefix = chalk.bold.red("[ERROR] =>")
+        const prefix = kleur.bold(kleur.red("[ERROR] =>"))
         console.error(prefix, ...args);
     },
     info(...args) {
-        const prefix = chalk.bold.green("[INFO ] =>")
+        const prefix = kleur.bold(kleur.green("[INFO ] =>"))
         console.info(prefix, ...args);
     },
     warn(...args) {
-        const prefix = chalk.bold.yellow("[WARN ] =>")
+        const prefix = kleur.bold(kleur.yellow("[WARN ] =>"))
         console.error(prefix, ...args);
     },
     debug(...args) {
-        const prefix = chalk.bold.magenta("[DEBUG] =>")
+        const prefix = kleur.bold(kleur.magenta("[DEBUG] =>"))
         console.error(prefix, ...args);
     }
 }
