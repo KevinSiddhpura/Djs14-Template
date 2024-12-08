@@ -85,7 +85,8 @@ module.exports = {
         const isSlashCommand = interaction.isChatInputCommand() && command.runSlash;
         const isUserContextCommand = interaction.isUserContextMenuCommand() && command.runContextUser;
         const isMessageContextCommand = interaction.isMessageContextMenuCommand() && command.runContextMessage;
-
+        const isAutoCompleteCommand = interaction.isAutocomplete() && command.runAutocomplete;
+        
         if (isSlashCommand || isUserContextCommand || isMessageContextCommand) {
             try {
                 const checksPassed = await performChecks(command, interaction);
@@ -97,6 +98,8 @@ module.exports = {
                     command.runContextUser(client, interaction);
                 } else if (isMessageContextCommand) {
                     command.runContextMessage(client, interaction);
+                } else if(isAutoCompleteCommand) {
+                    command.runAutocomplete(client, interaction);
                 }
             } catch (error) {
                 logger.error(error);

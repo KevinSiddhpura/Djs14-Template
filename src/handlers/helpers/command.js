@@ -7,7 +7,8 @@ const {
     ChatInputCommandInteraction,
     Message,
     MessageContextMenuCommandInteraction,
-    UserContextMenuCommandInteraction
+    UserContextMenuCommandInteraction,
+    AutocompleteInteraction
 } = require("discord.js");
 
 const logger = require("./logger");
@@ -75,6 +76,13 @@ const commandLayout = {
     runSlash: async (client, interaction) => { },
 
     /**
+     * To run a slash command.
+     * @param {Client} client 
+     * @param {AutocompleteInteraction} interaction 
+     */
+    runAutocomplete: async (client, interaction) => { },
+
+    /**
      * To run a message context menu command.
      * @param {Client} client 
      * @param {MessageContextMenuCommandInteraction} interaction 
@@ -116,6 +124,7 @@ class Command {
             allowedChannels = [],
             options = [],
             runSlash,
+            runAutocomplete,
             runLegacy,
             runContextMessage,
             runContextUser
@@ -177,7 +186,7 @@ class Command {
 
     /**
      * 
-     * @returns {Collection}
+     * @returns {Collection<string, commandLayout>}
      */
 
     static getCommands = () => commands.toJSON();
