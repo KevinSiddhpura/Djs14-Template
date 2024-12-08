@@ -16,7 +16,7 @@ const client = new Client({
 
 runEvents(client);
 
-client.login(process.env.TOKEN);
+client.login();
 
 process.on("unhandledRejection", (err) => {
     logger.error(err);
