@@ -2,9 +2,9 @@ const path = require("path");
 const fs = require("fs");
 const { REST, Routes } = require("discord.js");
 const logger = require("./helpers/logger");
-const { dev_guild } = require("../config");
 const axios = require("axios");
-const { commandsCollection, getCommands } = require("./helpers/command");
+const { getCommands } = require("./helpers/command");
+const { dev_guild } = require("../config");
 
 /**
  * A utility class containing various helper functions for common tasks.
@@ -75,12 +75,12 @@ class Utils {
      */
     static registerCommands(client) {
         new Promise(async (res, rej) => {
-            const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+            const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
             const commands = getCommands();
 
             try {
                 logger.debug(`Attempting to refresh commands`);
-                const route = process.env.TYPE === "dev"
+                const route = process.argv.includes("--dev")
                     ? Routes.applicationGuildCommands(client.user.id, dev_guild)
                     : Routes.applicationCommands(client.user.id);
 
@@ -93,92 +93,7 @@ class Utils {
             }
         })
     }
-
-    /**
-     * Reloads the configuration file.
-     * @returns {Promise<boolean>} - True if reloaded successfully, false otherwise.
-     */
-    static async reloadConfig() {
-        try {
-            delete require.cache[require.resolve("../config")];
-            require("../config");
-            logger.debug("Reloaded config");
-            return true;
-        } catch (error) {
-            logger.error(`Failed to reload config: ${error.message}`);
-            return false;
-        }
-    }
-
-    /**
-     * Reloads all event files.
-     * @returns {Promise<boolean>} - True if successful, false otherwise.
-     */
-    static async reloadEvents() {
-        const eventFolders = Utils.getFiles(path.join(__dirname, "../events"), true);
-
-        for (const folder of eventFolders) {
-            const files = Utils.getFiles(folder);
-            for (const file of files) {
-                if (file.endsWith(".js")) {
-                    try {
-                        delete require.cache[require.resolve(file)];
-                        require(file);
-                        logger.debug(`Reloaded ${file}`);
-                    } catch (error) {
-                        logger.error(`Failed to reload event ${file}: ${error.message}`);
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Reloads all commands and clears the command collection.
-     * @returns {Promise<boolean>} - True if successful, false otherwise.
-     */
-    static async reloadCommands() {
-        commandCollection.clear();
-        let deleted = 0;
-
-        const commandFolders = {
-            chatInput: Utils.getFiles(path.join(__dirname, "../commands/chatInput"), true),
-            context: Utils.getFiles(path.join(__dirname, "../commands/context"), true),
-        };
-
-        for (const folders of Object.values(commandFolders)) {
-            for (const folder of folders) {
-                const files = Utils.getFiles(folder);
-                for (const file of files) {
-                    if (file.endsWith(".js")) {
-                        try {
-                            delete require.cache[require.resolve(file)];
-                            deleted++;
-                            logger.debug(`Reloaded ${file}`);
-                        } catch (error) {
-                            logger.error(`Failed to reload command ${file}: ${error.message}`);
-                        }
-                    }
-                }
-            }
-        }
-
-        Utils.requireCommands();
-
-        return new Promise(resolve => {
-            setTimeout(() => {
-                if (deleted === commandCollection.size) {
-                    logger.debug("Reloaded commands successfully");
-                    resolve(true);
-                } else {
-                    logger.error("Failed to reload certain commands");
-                    resolve(false);
-                }
-            }, 2000);
-        });
-    }
-
+    
     /**
      * Finds a channel in the guild by name or ID.
      * @param {string} input - The channel name or ID.
