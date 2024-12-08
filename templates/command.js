@@ -27,6 +27,8 @@ new Command({
     // For slash commands | Type ChatInput
     runSlash: async (client, interaction) => { },
     // For slash commands | Type ChatInput
+    runAutocomplete: async (client, interaction) => { },
+    // For slash commands
     runLegacy: async (client, message, args) => { },
     // For slash commands | Type Message
     runContextMessage: async (client, interaction) => { },
